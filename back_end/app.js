@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'user_management_db',
+  database: 'graduation_project',
 });
 
 // เชื่อมต่อกับ MySQL
