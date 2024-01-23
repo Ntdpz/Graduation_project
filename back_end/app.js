@@ -17,11 +17,11 @@ app.use(cors());
 // Set the port to 8080
 const port = 8080;
 
-// Use routes (สร้าง URL prefix '/api' สำหรับ userRoutes)
-app.use('/api', userRoutes);
-
 // Connect to the database and start the server
 connectToDatabase().then(() => {
+  app.use(express.json());  // เพิ่ม middleware เพื่อให้ Express ทำการ parse ข้อมูล JSON ใน request body
+  app.use('/api', userRoutes);
+  
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

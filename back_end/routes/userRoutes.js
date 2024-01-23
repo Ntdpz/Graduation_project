@@ -18,7 +18,6 @@ router.use(async (req, res, next) => {
 // Route สำหรับสร้างผู้ใช้ใหม่
 router.post('/users', async (req, res) => {
   try {
-    await connectToDatabase();
     const {
       user_firstname,
       user_lastname,
