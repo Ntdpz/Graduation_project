@@ -18,7 +18,7 @@
     },
     async asyncData({ $axios }) {
       try {
-        const response = await $axios.get('/users');
+        const response = await $axios.get('/api/users');
         return { userList: response.data };
       } catch (error) {
         console.error('Error fetching user list:', error);
