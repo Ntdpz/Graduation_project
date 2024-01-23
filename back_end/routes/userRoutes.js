@@ -7,44 +7,34 @@ const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'))
 // Middleware สำหรับการแปลง JSON
 router.use(async (req, res, next) => {
   try {
-    // Set up CORS headers
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
-    // Intercept OPTIONS method
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(200);
-    } else {
-      await connectToDatabase();
-      next();
-    }
+    await connectToDatabase();  // ต้องรอให้การเชื่อมต่อเสร็จสิ้นก่อนที่จะไปต่อ
+    next();
   } catch (error) {
     console.error('Error connecting to the database:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-
 // Route สำหรับสร้างผู้ใช้ใหม่
 router.post('/users', async (req, res) => {
-  const {
-    user_firstname,
-    user_lastname,
-    user_id,
-    user_position,
-    user_department,
-    user_email,
-    user_password,
-    user_status,
-    user_role,
-    user_pic,
-  } = req.body;
-
-  const query =
-    'INSERT INTO Users (user_firstname, user_lastname, user_id, user_position, user_department, user_email, user_password, user_status, user_role, user_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
   try {
+    await connectToDatabase();
+    const {
+      user_firstname,
+      user_lastname,
+      user_id,
+      user_position,
+      user_department,
+      user_email,
+      user_password,
+      user_status,
+      user_role,
+      user_pic,
+    } = req.body;
+
+    const query =
+      'INSERT INTO Users (user_firstname, user_lastname, user_id, user_position, user_department, user_email, user_password, user_status, user_role, user_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
     await new Promise((resolve, reject) => {
       db.query(
         query,
@@ -66,6 +56,7 @@ router.post('/users', async (req, res) => {
         }
       );
     });
+
     res.send('User created successfully');
   } catch (error) {
     console.error('Error creating user:', error);
@@ -75,20 +66,22 @@ router.post('/users', async (req, res) => {
 
 // Route สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
 router.get('/users', async (req, res) => {
+  try {
+    await connectToDatabase();  // ต้องรอให้การเชื่อมต่อเสร็จสิ้นก่อนที่จะไปต่อ
     const query = 'SELECT * FROM Users';
-  
-    try {
-      const results = await new Promise((resolve, reject) => {
-        db.query(query, (err, results) => {
-          if (err) reject(err);
-          resolve(results);
-        });
+
+    const results = await new Promise((resolve, reject) => {
+      db.query(query, (err, results) => {
+        if (err) reject(err);
+        resolve(results);
       });
-      res.json(results);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+    });
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 module.exports = router;
