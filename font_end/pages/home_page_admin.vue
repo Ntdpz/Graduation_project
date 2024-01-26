@@ -1,25 +1,28 @@
 <template>
-    <v-row>
-      <v-col class="text-center">
-        <img
-          src="/v.png"
-          alt="Vuetify.js"
-          class="mb-5"
-        >
-        <blockquote class="blockquote">
-          &#8220;First, solve the problem. Then, write the code.&#8221;
-          <footer>
-            <small>
-              <em>&mdash;Admin</em>
-            </small>
-          </footer>
-        </blockquote>
-      </v-col>
-    </v-row>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Home Page Admin'
+  <v-row>
+    <v-col class="text-center">
+
+      <!-- Manage User Button with router-link -->
+      <router-link to="/manage_user">
+        <v-btn class="button-spacing">Manage User</v-btn>
+      </router-link>
+
+      <!-- Manage Project Button with router-link -->
+      <router-link to="/manage_project">
+        <v-btn>Manage Project</v-btn>
+      </router-link>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+export default {
+  name: 'HomePageAdmin'
+}
+</script>
+
+<style scoped>
+  .button-spacing {
+    margin-right: 16px; /* หรือค่าที่คุณต้องการ */
   }
-  </script>
+</style>
