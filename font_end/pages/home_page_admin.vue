@@ -26,3 +26,4 @@ export default {
     margin-right: 16px; /* หรือค่าที่คุณต้องการ */
   }
 </style>
+
