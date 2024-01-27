@@ -82,11 +82,10 @@ router.post('/users', async (req, res) => {
   }
 });
 
-
+// Route สำหรับอัปเดตข้อมูลผู้ใช้
 router.put('/users/:user_id', async (req, res) => {
   try {
     const { user_firstname, user_position } = req.body;
-
     const { user_id } = req.params;
 
     // Create an object to store only the fields that need to be updated
@@ -127,6 +126,7 @@ router.put('/users/:user_id', async (req, res) => {
   }
 });
 
+// Route สำหรับลบผู้ใช้
 router.delete('/users/:user_id', async (req, res) => {
   try {
     const { user_id } = req.params;
