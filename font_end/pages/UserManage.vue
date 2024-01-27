@@ -11,6 +11,7 @@
             single-line
             hide-details
           />
+          <v-btn color="primary" dark class="ml-2" @click="dialog = true, editedItem = { id: 0, name: '', email: '', role: '' }">Add User</v-btn>
         </v-card-title>
         <v-data-table :headers="headers" :items="users" :search="search">
           <template v-slot:item.actions="{ item }">
@@ -24,7 +25,7 @@
       <v-dialog v-model="dialog" max-width="500px">
         <v-card>
           <v-card-title>
-            <span class="headline">Edit User</span>
+            <span class="headline">{{ editedItem.id === 0 ? 'Add User' : 'Edit User' }}</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -99,20 +100,17 @@
         roles: ["Admin", "User"],
       };
     },
-  
     methods: {
       editItem(item) {
         this.editedIndex = this.users.indexOf(item);
         this.editedItem = Object.assign({}, item);
         this.dialog = true;
       },
-  
       deleteItem(item) {
         const index = this.users.indexOf(item);
         confirm("Are you sure you want to delete this item?") &&
           this.users.splice(index, 1);
       },
-  
       close() {
         this.dialog = false;
         this.$nextTick(() => {
@@ -120,7 +118,6 @@
           this.editedIndex = -1;
         });
       },
-  
       save() {
         if (this.editedIndex > -1) {
           Object.assign(this.users[this.editedIndex], this.editedItem);
