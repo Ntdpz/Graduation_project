@@ -4,8 +4,8 @@ const cors = require('cors');
 
 // Import userRoutes and projectRoutes modules
 const userRoutes = require('./routes/userRoutes');
-const projectRoutes = require('./routes/projectRoutes');  // เพิ่มการ import
-
+const projectRoutes = require('./routes/projectRoutes');  
+const systemRoutes = require('./routes/systemRoutes'); 
 // Import db module
 const { connectToDatabase } = require('./modules/db');
 
@@ -23,6 +23,7 @@ connectToDatabase().then(() => {
   app.use(express.json());  // เพิ่ม middleware เพื่อให้ Express ทำการ parse ข้อมูล JSON ใน request body
   app.use('/api', userRoutes);
   app.use('/api', projectRoutes);  // เพิ่มการใช้งาน projectRoutes
+  app.use('/api', systemRoutes);
   
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
