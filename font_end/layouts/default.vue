@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -90,12 +90,15 @@
 
 <script>
 export default {
-  name: 'DefaultLayout',
-  data () {
+  data() {
     return {
       clipped: false,
       drawer: false,
       fixed: false,
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'Admin page',
       items: [
         {
           icon: 'mdi-apps',
@@ -104,19 +107,21 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'Admin page',
+          to: '/home_page_admin'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Home Page Admin',
-          to: '/home_page_admin'
+          icon: 'mdi-account',
+          title: 'Main test',
+          to: '/navbar'
+        },
+         {
+          icon: 'mdi-account',
+          title: 'Main test2',
+          to: '/UserManage'
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Amin Management'
+
+      ]
     }
   }
 }
