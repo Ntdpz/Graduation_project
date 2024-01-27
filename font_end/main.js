@@ -6,6 +6,7 @@ import VueRouter from 'vue-router';
 import HomePageAdmin from './components/HomePageAdmin.vue';
 import ManageUser from './components/ManageUser.vue';
 import ManageProject from './components/ManageProject.vue';
+import UserManage from './components/UserManage.vue'
 
 Vue.config.productionTip = false;
 
@@ -16,6 +17,8 @@ const routes = [
   { path: '/admin', component: HomePageAdmin },
   { path: '/manage_user', component: ManageUser },
   { path: '/manage_project', component: ManageProject }
+  { path: '/UserManage', component: UserManage }
+  
 ];
 
 const router = new VueRouter({
@@ -25,4 +28,8 @@ const router = new VueRouter({
 new Vue({
   render: h => h(App),
   router
-}).$mount('#app');
+}).$mount('#app')
+
+
+
+
