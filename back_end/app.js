@@ -6,7 +6,10 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');  
 const systemRoutes = require('./routes/systemRoutes'); 
-const user_projectsRoutes = require('./routes/user_projectsRoutes');
+const screensRoutes = require('./routes/screensRoutes.js');
+const user_projectsRoutes = require('./routes/user/user_projectsRoutes.js');
+const user_systemRoutes = require('./routes/user/user_systemsRoutes.js');
+const user_screensRoutes = require('./routes/user/user_screensRoutes.js');
 // Import db module
 const { connectToDatabase } = require('./modules/db');
 
@@ -26,7 +29,10 @@ connectToDatabase().then(() => {
   app.use('/api', userRoutes);
   app.use('/api', projectRoutes);  // เพิ่มการใช้งาน projectRoutes
   app.use('/api', systemRoutes);
+  app.use('/api', screensRoutes);
   app.use('/api', user_projectsRoutes);
+  app.use('/api', user_systemRoutes);
+  app.use('/api', user_screensRoutes);
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

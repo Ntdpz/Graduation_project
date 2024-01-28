@@ -47,6 +47,7 @@ router.post('/projects', async (req, res) => {
   }
 });
 
+// Route สำหรับดึงข้อมูลโปรเจ็คทั้งหมด
 router.get('/projects', async (req, res) => {
   try {
     const query = 'SELECT * FROM Projects';
@@ -64,6 +65,32 @@ router.get('/projects', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+// Route สำหรับดึงข้อมูลโปรเจ็คด้วย ID
+router.get('/projects/:project_id', async (req, res) => {
+  try {
+    const { project_id } = req.params;
+
+    const query = 'SELECT * FROM Projects WHERE project_id = ?';
+
+    const results = await new Promise((resolve, reject) => {
+      db.query(query, [project_id], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'Project not found' });
+    } else {
+      res.json(results[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching project by ID:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 router.put('/projects/:project_id', async (req, res) => {
   try {

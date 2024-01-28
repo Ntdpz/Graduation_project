@@ -166,5 +166,30 @@ router.get('/users', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+// Route สำหรับดึงข้อมูลผู้ใช้ด้วย ID
+router.get('/users/:user_id', async (req, res) => {
+  try {
+    await connectToDatabase();
+    const { user_id } = req.params;
+
+    const query = 'SELECT * FROM Users WHERE user_id = ?';
+
+    const results = await new Promise((resolve, reject) => {
+      db.query(query, [user_id], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'User not found' });
+    } else {
+      res.json(results[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 module.exports = router;
