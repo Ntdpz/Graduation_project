@@ -98,7 +98,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Admin page',
+      title: 'Admin page home',
       items: [
         {
           icon: 'mdi-apps',
