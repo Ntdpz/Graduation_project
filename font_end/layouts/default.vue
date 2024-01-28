@@ -111,12 +111,12 @@ export default {
           to: '/home_page_admin'
         },
         {
-          icon: 'mdi-account',
+          icon: 'mdi-folder-multiple',
           title: 'Main test',
           to: '/navbar'
         },
          {
-          icon: 'mdi-account',
+          icon: 'mdi-account-multiple',
           title: 'Main test2',
           to: '/UserManage'
         }
