@@ -1,8 +1,7 @@
-// Import express module
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');  // Import bodyParser module
 
-// Import userRoutes and projectRoutes modules
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');  
 const systemRoutes = require('./routes/systemRoutes'); 
@@ -10,29 +9,27 @@ const screensRoutes = require('./routes/screensRoutes.js');
 const user_projectsRoutes = require('./routes/user/user_projectsRoutes.js');
 const user_systemRoutes = require('./routes/user/user_systemsRoutes.js');
 const user_screensRoutes = require('./routes/user/user_screensRoutes.js');
-// Import db module
 const { connectToDatabase } = require('./modules/db');
 
-
-// Create an Express application
 const app = express();
 
-// Set up CORS middleware
 app.use(cors());
 
-// Set the port to 8080
 const port = 8080;
 
-// Connect to the database and start the server
 connectToDatabase().then(() => {
-  app.use(express.json());  // เพิ่ม middleware เพื่อให้ Express ทำการ parse ข้อมูล JSON ใน request body
+  // เปลี่ยน express.json() และ express.urlencoded() เป็น bodyParser.json() และ bodyParser.urlencoded()
+  app.use(bodyParser.json({ limit: '50mb' })); // ตั้งขนาดสูงสุดของ JSON payload
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // ตั้งขนาดสูงสุดของ URL-encoded payload
+  
   app.use('/api', userRoutes);
-  app.use('/api', projectRoutes);  // เพิ่มการใช้งาน projectRoutes
+  app.use('/api', projectRoutes);
   app.use('/api', systemRoutes);
   app.use('/api', screensRoutes);
   app.use('/api', user_projectsRoutes);
   app.use('/api', user_systemRoutes);
   app.use('/api', user_screensRoutes);
+  
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

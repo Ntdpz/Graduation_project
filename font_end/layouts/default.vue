@@ -2,61 +2,81 @@
 
 <template>
   <div>
-    <header>
-      <h1>Nuxt.js User Management</h1>
-      <nav>
-        <nuxt-link to="/">Home</nuxt-link>
-        <nuxt-link to="/CRUD_User/createUser">Create User</nuxt-link>
-      </nav>
-    </header>
+    <v-app>
+      <v-app-bar app class="custom-toolbar">
+        <nav>
+          <v-menu>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
 
-    <main>
-      <nuxt />
-    </main>
+            <v-list>
+              <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+                @click="handleMenuItemClick(item.title)"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </nav>
 
-    <footer>
-      <p>&copy; 2024 Your Company</p>
-    </footer>
+        <v-spacer class="custom-spacer"></v-spacer>
+
+        <v-toolbar-title>Progress Tracking</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+      </v-app-bar>
+
+      <v-main>
+        <nuxt />
+      </v-main>
+
+      <v-footer app>
+        <v-col>
+          <v-row justify="center">
+            <v-col>
+              <p>&copy; Senior Project รักน้า 💖</p>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-footer>
+    </v-app>
   </div>
 </template>
 
+<script>
+export default {
+  data: () => ({
+    items: [{ title: "Dashbord" }, { title: "All project" }],
+  }),
+  methods: {
+    handleMenuItemClick(title) {
+      // เพิ่มโค้ดที่คุณต้องการให้ทำเมื่อเลือกเมนู
+      console.log(`Menu item clicked: ${title}`);
+    },
+  },
+};
+</script>
+
 <style>
-  /* Add your styling here */
+/* Add your styling here */
 
-  body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-  }
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
 
-  nav {
-    margin-top: 10px;
-  }
-
-  nav a {
-    color: #fff;
-    margin-right: 15px;
-    text-decoration: none;
-  }
-
-  main {
-    margin: 20px;
-  }
-
-  footer {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
+.custom-spacer {
+  width: 20px; /* ปรับขนาดของ spacer ตามที่ต้องการ */
+}
 </style>

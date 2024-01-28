@@ -1,22 +1,29 @@
 <template>
-  <div>
-    <h1>User Management</h1>
+  <v-row>
+    <v-col class="text-center">
 
-    <!-- เพิ่มปุ่มสำหรับไปยังหน้า createUser.vue -->
-    <nuxt-link to="/User/createUser">Go to Create User</nuxt-link>
-    <nuxt-link to="/User/users">Go to Show User</nuxt-link>
+      <!-- Manage User Button with router-link -->
+      <router-link to="/manage_user">
+        <v-btn class="button-spacing">Manage User</v-btn>
+      </router-link>
 
-    <!-- หรือใช้ HTML <a> tag -->
-    <!-- <a href="/CRUD_User/createUser">Go to Create User</a> -->
-  </div>
+      <!-- Manage Project Button with router-link -->
+      <router-link to="/manage_project">
+        <v-btn>Manage Project</v-btn>
+      </router-link>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 export default {
-
+  name: 'HomePageAdmin'
 }
 </script>
 
-<style>
-
+<style scoped>
+  .button-spacing {
+    margin-right: 16px; /* หรือค่าที่คุณต้องการ */
+  }
 </style>
+
