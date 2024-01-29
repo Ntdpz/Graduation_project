@@ -1,35 +1,25 @@
+// router/index.js
 import Vue from 'vue';
-import App from './App.vue';
 import VueRouter from 'vue-router';
-
-// Import components
+import EditUser from '@/pages/User/EditUser.vue';
 import HomePageAdmin from './components/HomePageAdmin.vue';
 import ManageUser from './components/ManageUser.vue';
 import ManageProject from './components/ManageProject.vue';
-import UserManage from './components/UserManage.vue'
-
-Vue.config.productionTip = false;
+import UserManage from './components/UserManage.vue';
 
 Vue.use(VueRouter);
 
-const routes = [
+export const routes = [
   { path: '/', redirect: '/admin' },  // Redirect root to /admin
   { path: '/admin', component: HomePageAdmin },
   { path: '/manage_user', component: ManageUser },
-  { path: '/manage_project', component: ManageProject }
-  { path: '/UserManage', component: UserManage }
-  
+  { path: '/manage_project', component: ManageProject },
+  { path: '/UserManage', component: UserManage },
+  { path: '/User/editUser/:id', name: 'edit-user', component: EditUser }
 ];
 
 const router = new VueRouter({
   routes
 });
 
-new Vue({
-  render: h => h(App),
-  router
-}).$mount('#app')
-
-
-
-
+export default router;

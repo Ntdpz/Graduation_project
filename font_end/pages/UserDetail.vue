@@ -1,5 +1,7 @@
+<!-- UserDetail.vue -->
+
 <template>
-   <v-card
+  <v-card
     :loading="loading"
     class="mx-auto my-12 custom-card"
     max-width="60%"
@@ -18,10 +20,7 @@
 
     <div class="user-details">
       <v-card-item>
-        <v-card-title
-          >Name: {{ user.user_firstname }}
-          {{ user.user_lastname }}</v-card-title
-        >
+        <v-card-title @click="goBack">Name: {{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
         <v-card-subtitle>
           <span class="me-1">Position: {{ user.user_position }}</span>
         </v-card-subtitle>
@@ -69,8 +68,8 @@
     </div>
   </v-card>
 </template>
-  
-  <script>
+
+<script>
 export default {
   data() {
     return {
@@ -87,10 +86,15 @@ export default {
     this.user = response.data;
     this.loading = false;
   },
+  methods: {
+    goBack() {
+      this.$router.go(-1); // ไปหน้าที่แล้ว
+    },
+  },
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .custom-card {
   width: 60%;
   margin: auto;
@@ -117,4 +121,3 @@ export default {
   padding: 16px;
 }
 </style>
-  

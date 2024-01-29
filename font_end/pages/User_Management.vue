@@ -1,3 +1,5 @@
+<!-- User_Management.vue -->
+
 <template>
   <div>
     <!-- Search bar -->
@@ -20,20 +22,16 @@
 
     <v-row>
       <!-- Loop through users and display cards -->
-      <v-col
-        v-for="(user, index) in filteredUsers"
-        :key="index"
-        cols="12"
-        md="4"
+      <v-col v-for="(user, index) in filteredUsers" :key="index" cols="12" md="4">
+    <v-card class="mx-auto" max-width="400">
+      <v-img
+        class="align-end text-white"
+        height="200"
+        :src="user.user_pic"
+        cover
+        @click="viewDetails(user)"
       >
-        <v-card class="mx-auto" max-width="400" @click="viewDetails(user)">
-          <v-img
-            class="align-end text-white"
-            height="200"
-            :src="user.user_pic"
-            cover
-          >
-            <v-card-title
+            <v-card-title @click="viewDetails(user)"
               >{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title
             >
           </v-img>
@@ -48,20 +46,53 @@
             <div>{{ user.user_email }}</div>
           </v-card-text>
 
-          <v-card-actions>
-            <v-btn color="orange" @click="editUser(user)"> Edit </v-btn>
-            <v-btn color="orange" @click="deleteUser(user)"> Delete </v-btn>
-          </v-card-actions>
+          <v-row class="mb-2">
+            <v-col class="text-right" cols="12">
+              <v-btn class="mx-2" color="orange" @click="editUser(user)"
+                >Edit</v-btn
+              >
+              <v-btn class="mx-2" color="orange" @click="deleteUser(user)"
+                >Delete</v-btn
+              >
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- เพิ่มฟอร์มแก้ไขข้อมูล -->
+    <v-dialog v-model="editDialog" max-width="600">
+      <v-card>
+        <v-card-title>Edit User</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="saveEditedUser">
+            <v-text-field
+              v-model="editedUser.user_firstname"
+              label="First Name"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_lastname"
+              label="Last Name"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_department"
+              label="Department"
+            ></v-text-field>
+            <!-- เพิ่มฟิลด์อื่น ๆ ตามความต้องการ -->
+
+            <v-btn type="submit">Save Changes</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
+
 <script>
 export default {
   methods: {
     navigateBack() {
-      this.$router.push("/User_Management"); // แทน path-to-user-management ด้วย path ที่คุณต้องการ
+      this.$router.push("/User_Management");
     },
     addUser() {
       this.$router.push("/User/createUser");
@@ -70,7 +101,8 @@ export default {
       this.$router.push({ name: "user-detail", params: { id: user.user_id } });
     },
     async editUser(user) {
-      // Implement edit user functionality as needed
+      this.editedUser = { ...user };
+      this.editDialog = true;
     },
     async deleteUser(user) {
       try {
@@ -79,10 +111,8 @@ export default {
         );
         console.log("User deleted successfully:", response.data);
 
-        // หลังจากลบเสร็จให้ทำการ refresh ข้อมูล users โดยการเรียก API GET ใหม่
         await this.refreshUsersData();
 
-        // หลังจากที่ refresh ข้อมูลเสร็จ ให้ navigate กลับไปยังหน้า User Management
         this.navigateBack();
       } catch (error) {
         console.error("Error deleting user:", error.response.data);
@@ -92,7 +122,6 @@ export default {
       const response = await this.$axios.get("http://localhost:8080/api/users");
       this.users = response.data;
 
-      // ทำการ filter ข้อมูลอีกครั้ง หากต้องการ
       this.searchUsers();
     },
     searchUsers() {
@@ -110,24 +139,28 @@ export default {
             .includes(this.searchTerm.toLowerCase())
       );
     },
+    saveEditedUser() {
+      this.editDialog = false;
+      // ทำตามความต้องการ เช่น ส่งข้อมูลที่แก้ไขไปบันทึกลงในฐานข้อมูล
+    },
   },
   data() {
     return {
-      users: [], // Array to store user data from API
-      searchTerm: "", // The term entered in the search bar
-      filteredUsers: [], // Array to store filtered users
+      users: [],
+      searchTerm: "",
+      filteredUsers: [],
+      editDialog: false,
+      editedUser: {},
     };
   },
   async mounted() {
-    // Fetch user data from API and assign it to the 'users' array
     const response = await this.$axios.get("http://localhost:8080/api/users");
     this.users = response.data;
 
-    // Initialize filteredUsers with all users on mount
     this.filteredUsers = this.users;
   },
   watch: {
-    searchTerm: "searchUsers", // Watch for changes in searchTerm and trigger searchUsers
+    searchTerm: "searchUsers",
   },
 };
 </script>
