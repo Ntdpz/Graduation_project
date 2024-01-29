@@ -60,8 +60,11 @@
 <script>
 export default {
   methods: {
+    navigateBack() {
+      this.$router.push("/User_Management"); // แทน path-to-user-management ด้วย path ที่คุณต้องการ
+    },
     addUser() {
-      this.$router.push('/User/createUser');
+      this.$router.push("/User/createUser");
     },
     async viewDetails(user) {
       this.$router.push({ name: "user-detail", params: { id: user.user_id } });
@@ -70,7 +73,27 @@ export default {
       // Implement edit user functionality as needed
     },
     async deleteUser(user) {
-      // Implement delete user functionality as needed
+      try {
+        const response = await this.$axios.delete(
+          `http://localhost:8080/api/users/${user.user_id}`
+        );
+        console.log("User deleted successfully:", response.data);
+
+        // หลังจากลบเสร็จให้ทำการ refresh ข้อมูล users โดยการเรียก API GET ใหม่
+        await this.refreshUsersData();
+
+        // หลังจากที่ refresh ข้อมูลเสร็จ ให้ navigate กลับไปยังหน้า User Management
+        this.navigateBack();
+      } catch (error) {
+        console.error("Error deleting user:", error.response.data);
+      }
+    },
+    async refreshUsersData() {
+      const response = await this.$axios.get("http://localhost:8080/api/users");
+      this.users = response.data;
+
+      // ทำการ filter ข้อมูลอีกครั้ง หากต้องการ
+      this.searchUsers();
     },
     searchUsers() {
       this.filteredUsers = this.users.filter(

@@ -1,15 +1,18 @@
 <template>
   <v-row>
-    <v-col class="text-center">
-
+    <v-col class="text-center" mt="4">
       <!-- Manage User Button with router-link -->
-      <router-link to="/manage_user">
-        <v-btn class="button-spacing">Manage User</v-btn>
+      <router-link to="/User_Management">
+        <v-btn class="button-spacing" color="primary" dark large mt="2"
+          >Manage User</v-btn
+        >
       </router-link>
 
       <!-- Manage Project Button with router-link -->
       <router-link to="/manage_project">
-        <v-btn>Manage Project</v-btn>
+        <v-btn class="button-spacing" color="teal" dark large mt="2" mb="4"
+          >Manage Project</v-btn
+        >
       </router-link>
     </v-col>
   </v-row>
@@ -17,13 +20,13 @@
 
 <script>
 export default {
-  name: 'HomePageAdmin'
-}
+  name: "HomePageAdmin",
+};
 </script>
 
 <style scoped>
-  .button-spacing {
-    margin-right: 16px; /* หรือค่าที่คุณต้องการ */
-  }
+.button-spacing {
+  margin-top: 60px; /* หรือค่าที่คุณต้องการ */
+  margin-right: 40px;
+}
 </style>
-

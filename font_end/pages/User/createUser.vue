@@ -1,67 +1,88 @@
 <!-- pages/CreateUser.vue -->
 
 <template>
-  <div>
-    <h1>Create User</h1>
+  <v-app>
+    <div>
+      <!-- เริ่มส่วนของฟอร์ม -->
+      <h1>Create User</h1>
 
-    <form @submit.prevent="createUser" class="user-form">
-      
-      <label for="user_firstname">First Name:</label>
-      <input v-model="user_firstname" type="text" required />
+      <!-- ฟอร์ม -->
+      <v-form @submit.prevent="createUser" class="user-form">
+        <!-- ช่องกรอกข้อมูล -->
+        <v-text-field
+          v-model="user_firstname"
+          label="First Name"
+          required
+        ></v-text-field>
 
-      <label for="user_lastname">Last Name:</label>
-      <input v-model="user_lastname" type="text" required />
+        <v-text-field
+          v-model="user_lastname"
+          label="Last Name"
+          required
+        ></v-text-field>
 
-      <label for="user_id">User ID:</label>
-      <input v-model="user_id" type="text" required />
+        <v-text-field v-model="user_id" label="User ID" required></v-text-field>
 
-      <label for="user_position">Position:</label>
-      <select v-model="user_position" required>
-        <option
-          v-for="position in positions"
-          :key="position.id"
-          :value="position.name"
-        >
-          {{ position.name }}
-        </option>
-      </select>
+        <v-select
+          v-model="user_position"
+          :items="positions.map((position) => position.name)"
+          label="Position"
+          required
+        ></v-select>
 
-      <label for="user_department">Department:</label>
-      <input v-model="user_department" type="text" required />
+        <v-text-field
+          v-model="user_department"
+          label="Department"
+          required
+        ></v-text-field>
 
-      <label for="user_email">Email:</label>
-      <input v-model="user_email" type="email" required />
+        <v-text-field
+          v-model="user_email"
+          label="Email"
+          type="email"
+          required
+        ></v-text-field>
 
-      <label for="user_password">Password:</label>
-      <input v-model="user_password" type="password" required />
+        <v-text-field
+          v-model="user_password"
+          label="Password"
+          type="password"
+          required
+        ></v-text-field>
 
-      <label for="user_status">Status:</label>
-      <select v-model="user_status" required>
-        <option value="Active">Active</option>
-        <option value="Inactive">Inactive</option>
-      </select>
+        <v-select
+          v-model="user_status"
+          :items="['Active', 'Inactive']"
+          label="Status"
+          required
+        ></v-select>
 
-      <label for="user_role">Role:</label>
-      <select v-model="user_role" required>
-        <option value="Admin">Admin</option>
-        <option value="User">User</option>
-      </select>
+        <v-select
+          v-model="user_role"
+          :items="['Admin', 'User']"
+          label="Role"
+          required
+        ></v-select>
 
-      <label for="user_pic">Profile Picture:</label>
-      <div>
-        <input type="file" @change="handleFileChange" />
-      </div>
-      <!-- Add other form fields for user data -->
+        <!-- แนบไฟล์รูป -->
+        <label for="user_pic">Profile Picture:</label>
+        <div>
+          <input type="file" @change="handleFileChange" />
+        </div>
 
-      <button type="submit">Create User</button>
-    </form>
-  </div>
+        <!-- ปุ่ม submit -->
+        <v-btn type="submit">Create User</v-btn>
+      </v-form>
+      <!-- สิ้นสุดฟอร์ม -->
+    </div>
+  </v-app>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      // ตัวแปรที่ใช้ในฟอร์ม
       user_firstname: "",
       user_lastname: "",
       user_id: "",
@@ -72,20 +93,24 @@ export default {
       user_status: "Active",
       user_role: "User",
       user_pic: null,
+      // รายชื่อตำแหน่งงาน
       positions: [
         { id: 1, name: "Manager" },
         { id: 2, name: "Developer" },
         { id: 3, name: "Designer" },
-        // Add other positions as needed
+        // เพิ่มตำแหน่งงานเพิ่มเติมตามต้องการ
       ],
     };
   },
   methods: {
+    // ส่วนของการสร้างผู้ใช้
     async createUser() {
       try {
+        // สร้าง FormData เพื่อส่งไฟล์รูปภาพ
         const formData = new FormData();
         formData.append("user_pic", this.user_pic);
 
+        // ส่งข้อมูลผู้ใช้ไปยัง API
         const response = await this.$axios.post("/api/users", {
           Users: [
             {
@@ -108,6 +133,7 @@ export default {
         console.error("Error creating user:", error.response.data);
       }
     },
+    // ส่วนของการเลือกไฟล์รูปภาพ
     handleFileChange(event) {
       const file = event.target.files[0];
 
