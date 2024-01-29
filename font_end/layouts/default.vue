@@ -13,20 +13,25 @@
             </template>
 
             <v-list>
-              <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                @click="handleMenuItemClick(item.title)"
-              >
+              <v-list-item v-for="(item, i) in items" :key="i" @click="handleMenuItemClick(item.title)">
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
         </nav>
 
-        <v-spacer class="custom-spacer"></v-spacer>
+        <v-btn icon @click="goBack">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
 
-        <v-toolbar-title>Progress Tracking</v-toolbar-title>
+        <v-btn icon @click="goForward">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+
+        <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
+        <router-link to="/">
+          <v-toolbar-title class="custom-title">Progress Tracking</v-toolbar-title>
+        </router-link>
 
         <v-spacer></v-spacer>
       </v-app-bar>
@@ -58,11 +63,17 @@ export default {
       // เพิ่มโค้ดที่คุณต้องการให้ทำเมื่อเลือกเมนู
       console.log(`Menu item clicked: ${title}`);
     },
+    goBack() {
+      this.$router.go(-1); // Go back one step in history
+    },
+    goForward() {
+      this.$router.go(1); // Go forward one step in history
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 /* Add your styling here */
 
 body {
@@ -76,7 +87,13 @@ body {
   justify-content: space-between;
 }
 
+.custom-title {
+  text-decoration: none !important;
+  color: white !important;
+  border-bottom: none !important;
+}
+
 .custom-spacer {
-  width: 20px; /* ปรับขนาดของ spacer ตามที่ต้องการ */
+  width: 20px;
 }
 </style>
