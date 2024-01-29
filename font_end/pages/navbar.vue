@@ -24,7 +24,7 @@
             </div>
           </li>
         </ul>
-      </div>
+      </div> <v-btn @click="goBack" class="my-2">Back</v-btn>
     </div>
   </nav>
 </template>
@@ -32,6 +32,12 @@
 <script>
 export default {
   name: 'Navbar',
+  methods: {
+    goBack() {
+      // ใช้ router.back() เพื่อย้อนกลับไปหน้าที่แล้ว
+      this.$router.back();
+    },
+  },
 }
 </script>
 
