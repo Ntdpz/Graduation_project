@@ -22,15 +22,20 @@
 
     <v-row>
       <!-- Loop through users and display cards -->
-      <v-col v-for="(user, index) in filteredUsers" :key="index" cols="12" md="4">
-    <v-card class="mx-auto" max-width="400">
-      <v-img
-        class="align-end text-white"
-        height="200"
-        :src="user.user_pic"
-        cover
-        @click="viewDetails(user)"
+      <v-col
+        v-for="(user, index) in filteredUsers"
+        :key="index"
+        cols="12"
+        md="4"
       >
+        <v-card class="mx-auto" max-width="400">
+          <v-img
+            class="align-end text-white"
+            height="200"
+            :src="user.user_pic"
+            cover
+            @click="viewDetails(user)"
+          >
             <v-card-title @click="viewDetails(user)"
               >{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title
             >
@@ -77,6 +82,26 @@
             <v-text-field
               v-model="editedUser.user_department"
               label="Department"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_position"
+              label="Position"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_email"
+              label="Email"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_password"
+              label="Password"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_status"
+              label="Status"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedUser.user_role"
+              label="Role"
             ></v-text-field>
             <!-- เพิ่มฟิลด์อื่น ๆ ตามความต้องการ -->
 
@@ -140,8 +165,24 @@ export default {
       );
     },
     saveEditedUser() {
-      this.editDialog = false;
-      // ทำตามความต้องการ เช่น ส่งข้อมูลที่แก้ไขไปบันทึกลงในฐานข้อมูล
+      // ส่ง request ไปยัง API ด้วย method PUT
+      this.$axios
+        .put(
+          `http://localhost:8080/api/users/${this.editedUser.user_id}`,
+          this.editedUser
+        )
+        .then((response) => {
+          console.log("User updated successfully:", response.data);
+
+          // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
+          this.editDialog = false;
+
+          // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
+          this.refreshUsersData();
+        })
+        .catch((error) => {
+          console.error("Error updating user:", error.response.data);
+        });
     },
   },
   data() {
