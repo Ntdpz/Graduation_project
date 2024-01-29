@@ -31,7 +31,7 @@
         <v-spacer></v-spacer>
       </v-app-bar>
 
-      <v-main>
+      <v-main style="min-height: calc(100vh - 64px);"> <!-- 64px คือความสูงของ app bar -->
         <nuxt />
       </v-main>
 
@@ -51,7 +51,7 @@
 <script>
 export default {
   data: () => ({
-    items: [{ title: "Dashbord" }, { title: "All project" }],
+    items: [{ title: "Dashboard" }, { title: "All projects" }],
   }),
   methods: {
     handleMenuItemClick(title) {

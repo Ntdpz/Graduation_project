@@ -2,76 +2,58 @@
 
 <template>
   <div>
-    <h1 class="page-title">Create User</h1>
+    <h1>Create User</h1>
 
     <form @submit.prevent="createUser" class="user-form">
-      <div class="form-group">
-        <label for="user_firstname" class="label">First Name:</label>
-        <input v-model="user_firstname" type="text" required class="input" />
-      </div>
+      
+      <label for="user_firstname">First Name:</label>
+      <input v-model="user_firstname" type="text" required />
 
-      <div class="form-group">
-        <label for="user_lastname" class="label">Last Name:</label>
-        <input v-model="user_lastname" type="text" required class="input" />
-      </div>
+      <label for="user_lastname">Last Name:</label>
+      <input v-model="user_lastname" type="text" required />
 
-      <div class="form-group">
-        <label for="user_id" class="label">User ID:</label>
-        <input v-model="user_id" type="text" required class="input" />
-      </div>
+      <label for="user_id">User ID:</label>
+      <input v-model="user_id" type="text" required />
 
-      <div class="form-group">
-        <label for="user_position" class="label">Position:</label>
-        <select v-model="user_position" required class="select">
-          <option
-            v-for="position in positions"
-            :key="position.id"
-            :value="position.name"
-          >
-            {{ position.name }}
-          </option>
-        </select>
-      </div>
+      <label for="user_position">Position:</label>
+      <select v-model="user_position" required>
+        <option
+          v-for="position in positions"
+          :key="position.id"
+          :value="position.name"
+        >
+          {{ position.name }}
+        </option>
+      </select>
 
-      <div class="form-group">
-        <label for="user_department" class="label">Department:</label>
-        <input v-model="user_department" type="text" required class="input" />
-      </div>
+      <label for="user_department">Department:</label>
+      <input v-model="user_department" type="text" required />
 
-      <div class="form-group">
-        <label for="user_email" class="label">Email:</label>
-        <input v-model="user_email" type="email" required class="input" />
-      </div>
+      <label for="user_email">Email:</label>
+      <input v-model="user_email" type="email" required />
 
-      <div class="form-group">
-        <label for="user_password" class="label">Password:</label>
-        <input v-model="user_password" type="password" required class="input" />
-      </div>
+      <label for="user_password">Password:</label>
+      <input v-model="user_password" type="password" required />
 
-      <div class="form-group">
-        <label for="user_status" class="label">Status:</label>
-        <select v-model="user_status" required class="select">
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-      </div>
+      <label for="user_status">Status:</label>
+      <select v-model="user_status" required>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
 
-      <div class="form-group">
-        <label for="user_role" class="label">Role:</label>
-        <select v-model="user_role" required class="select">
-          <option value="Admin">Admin</option>
-          <option value="User">User</option>
-        </select>
-      </div>
+      <label for="user_role">Role:</label>
+      <select v-model="user_role" required>
+        <option value="Admin">Admin</option>
+        <option value="User">User</option>
+      </select>
 
-      <div class="form-group">
-        <label for="user_pic" class="label">Profile Picture:</label>
-        <div class="file-upload">
-          <input type="file" @change="handleFileChange" />
-        </div>
+      <label for="user_pic">Profile Picture:</label>
+      <div>
+        <input type="file" @change="handleFileChange" />
       </div>
+      <!-- Add other form fields for user data -->
 
-      <button type="submit" class="submit-button">Create User</button>
+      <button type="submit">Create User</button>
     </form>
   </div>
 </template>
@@ -161,10 +143,14 @@ export default {
 .label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
 }
 
-.input,
+.input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
 .select {
   width: 100%;
   padding: 8px;

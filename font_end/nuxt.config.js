@@ -3,6 +3,19 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
+  build: {
+    transpile: ['@vuelidate/core'],
+    // คำอธิบายอื่นๆที่คุณอาจต้องการเพิ่ม
+  },
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'user-detail', // ชื่อเส้นทาง
+        path: '/users/:id',  // พาธเส้นทาง
+        component: resolve(__dirname, 'pages/UserDetail.vue'), // ตำแหน่งของไฟล์ UserDetail.vue
+      });
+    },
+  },
   head: {
     titleTemplate: '%s - user_management',
     title: 'user_management',
