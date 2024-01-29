@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="text-center" mt="4">
       <!-- Manage User Button with router-link -->
-      <router-link to="/User_Management">
+      <router-link to="/user/User_Management">
         <v-btn class="button-spacing" color="primary" dark large mt="2"
           >Manage User</v-btn
         >
