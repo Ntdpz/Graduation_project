@@ -5,13 +5,8 @@
     <!-- Search bar -->
     <v-row>
       <v-col cols="9">
-        <v-text-field
-          v-model="searchTerm"
-          label="Search by First Name"
-          prepend-icon="mdi-magnify"
-          single-line
-          hide-details
-        ></v-text-field>
+        <v-text-field v-model="searchTerm" label="Search by First Name" prepend-icon="mdi-magnify" single-line
+          hide-details></v-text-field>
       </v-col>
       <v-col cols="2" class="text-right">
         <v-btn color="primary" class="my-4 mx-4" @click="addUser">+ Add User</v-btn>
@@ -22,23 +17,10 @@
 
     <v-row>
       <!-- Loop through users and display cards -->
-      <v-col
-        v-for="(user, index) in filteredUsers"
-        :key="index"
-        cols="12"
-        md="4"
-      >
+      <v-col v-for="(user, index) in filteredUsers" :key="index" cols="12" md="4">
         <v-card class="mx-auto" max-width="400">
-          <v-img
-            class="align-end text-white"
-            height="200"
-            :src="user.user_pic"
-            cover
-            @click="viewDetails(user)"
-          >
-            <v-card-title @click="viewDetails(user)"
-              >{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title
-            >
+          <v-img class="align-end text-white" height="200" :src="user.user_pic" cover @click="viewDetails(user)">
+            <v-card-title @click="viewDetails(user)">{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
           </v-img>
 
           <v-card-subtitle class="pt-4">
@@ -53,12 +35,8 @@
 
           <v-row class="mb-2">
             <v-col class="text-right" cols="12">
-              <v-btn class="mx-1" color="primary" @click="editUser(user)"
-                >Edit</v-btn
-              >
-              <v-btn class="mx-4" color="primary" @click="deleteUser(user)"
-                >Delete</v-btn
-              >
+              <v-btn class="mx-1" color="primary" @click="editUser(user)">Edit</v-btn>
+              <v-btn class="mx-4" color="primary" @click="deleteUser(user)">Delete</v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -71,43 +49,31 @@
         <v-card-title>Edit User</v-card-title>
         <v-card-text>
           <v-form @submit.prevent="saveEditedUser">
-            <v-text-field
-              v-model="editedUser.user_firstname"
-              label="First Name"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_lastname"
-              label="Last Name"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_department"
-              label="Department"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_position"
-              label="Position"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_email"
-              label="Email"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_password"
-              label="Password"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_status"
-              label="Status"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedUser.user_role"
-              label="Role"
-            ></v-text-field>
+            <v-text-field v-model="editedUser.user_firstname" label="First Name"></v-text-field>
+            <v-text-field v-model="editedUser.user_lastname" label="Last Name"></v-text-field>
+            <v-text-field v-model="editedUser.user_department" label="Department"></v-text-field>
+            <v-text-field v-model="editedUser.user_position" label="Position"></v-text-field>
+            <v-text-field v-model="editedUser.user_email" label="Email"></v-text-field>
+            <v-text-field v-model="editedUser.user_password" label="Password"></v-text-field>
+            <v-text-field v-model="editedUser.user_status" label="Status"></v-text-field>
+            <v-text-field v-model="editedUser.user_role" label="Role"></v-text-field>
             <!-- เพิ่มฟิลด์อื่น ๆ ตามความต้องการ -->
 
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
         </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="deleteDialog" max-width="400">
+      <v-card>
+        <v-card-title>Confirm Deletion</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete {{ userToDelete.user_firstname }} {{ userToDelete.user_lastname }}?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="deleteConfirmed">Yes</v-btn>
+          <v-btn color="error" @click="cancelDelete">No</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -184,6 +150,34 @@ export default {
           console.error("Error updating user:", error.response.data);
         });
     },
+    async deleteUser(user) {
+      this.userToDelete = user;
+      this.deleteDialog = true;
+    },
+
+    deleteConfirmed() {
+      this.deleteUserAction(this.userToDelete);
+      this.deleteDialog = false;
+    },
+
+    cancelDelete() {
+      this.deleteDialog = false;
+    },
+
+    async deleteUserAction(user) {
+      try {
+        const response = await this.$axios.delete(
+          `http://localhost:8080/api/users/${user.user_id}`
+        );
+        console.log("User deleted successfully:", response.data);
+
+        await this.refreshUsersData();
+
+        this.navigateBack();
+      } catch (error) {
+        console.error("Error deleting user:", error.response.data);
+      }
+    },
   },
   data() {
     return {
@@ -191,7 +185,9 @@ export default {
       searchTerm: "",
       filteredUsers: [],
       editDialog: false,
+      deleteDialog: false,
       editedUser: {},
+      userToDelete: {},
     };
   },
   async mounted() {
