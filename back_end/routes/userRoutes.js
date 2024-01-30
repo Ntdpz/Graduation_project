@@ -1,13 +1,10 @@
-//ไฟล์ userRoutes.js
 const express = require('express');
 const router = express.Router();
 const path = require('path');
 const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
 
-// Middleware สำหรับการแปลง JSON
 router.use(express.json());
 
-// Middleware สำหรับการเชื่อมต่อกับฐานข้อมูล
 router.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -18,18 +15,39 @@ router.use(async (req, res, next) => {
   }
 });
 
-// Route สำหรับสร้างผู้ใช้ใหม่
+router.post('/login', async (req, res) => {
+  try {
+    const { user_id, user_password } = req.body;
+
+    const query = 'SELECT * FROM Users WHERE user_id = ? AND user_password = ?';
+
+    const user = await new Promise((resolve, reject) => {
+      db.query(query, [user_id, user_password], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (user.length === 0) {
+      res.status(401).json({ error: 'Invalid user_id or password' });
+    } else {
+      res.json({ message: 'Login successful', user: user[0] });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.post('/users', async (req, res) => {
   try {
-    const { Users } = req.body;
+    const { users } = req.body;
 
-    // Check if Users array is provided
-    if (!Users || !Array.isArray(Users)) {
+    if (!users || !Array.isArray(users)) {
       return res.status(400).json({ error: 'Users array is required' });
     }
 
-    // Loop through each user in the array
-    for (const user of Users) {
+    for (const user of users) {
       const {
         user_firstname,
         user_lastname,
@@ -43,7 +61,6 @@ router.post('/users', async (req, res) => {
         user_id,
       } = user;
 
-      // Check if user_id is provided for each user
       if (!user_id) {
         return res.status(400).json({ error: 'user_id is required for each user' });
       }
