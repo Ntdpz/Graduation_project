@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const user_task = require('./routes/user/user_taskRoutes');
+const taskRoutes = require('./routes/taskRouter.js')
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const systemRoutes = require('./routes/systemRoutes');
@@ -22,6 +24,8 @@ connectToDatabase().then(() => {
   app.use(bodyParser.json({ limit: '50mb' })); // ตั้งขนาดสูงสุดของ JSON payload
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // ตั้งขนาดสูงสุดของ URL-encoded payload
 
+  app.use('/api', user_task);
+  app.use('/api', taskRoutes);
   app.use('/api', userRoutes);
   app.use('/api', projectRoutes);
   app.use('/api', systemRoutes);
