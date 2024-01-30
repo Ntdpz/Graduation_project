@@ -4,7 +4,7 @@
   <div>
     <!-- Search bar -->
     <v-row>
-      <v-col cols="9">
+      <v-col cols="">
         <v-text-field v-model="searchTerm" label="Search by First Name" prepend-icon="mdi-magnify" single-line
           hide-details></v-text-field>
       </v-col>
@@ -103,6 +103,10 @@ export default {
         console.log("User deleted successfully:", response.data);
 
         await this.refreshUsersData();
+
+        if (user.user_id === this.editedUser.user_id) {
+          this.editDialog = false;
+        }//เติมเพิ่มหรือแก้ไขตัวนี้เข้ามา สามารถลบได้
 
         this.navigateBack();
       } catch (error) {
