@@ -59,22 +59,22 @@ router.get('/user_projects', async (req, res) => {
 
 router.delete('/user_projects/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-
-        // Delete from user_projects table
-        await new Promise((resolve, reject) => {
-            const query = 'DELETE FROM user_projects WHERE id = ?';
-            db.query(query, [id], (err, result) => {
-                if (err) reject(err);
-                resolve(result);
-            });
+      const { id } = req.params;
+  
+      // Delete from user_projects table
+      await new Promise((resolve, reject) => {
+        const query = 'DELETE FROM user_projects WHERE id = ?';
+        db.query(query, [id], (err, result) => {
+          if (err) reject(err);
+          resolve(result);
         });
-
-        res.send('UserProjects deleted successfully');
+      });
+  
+      res.send('UserProjects deleted successfully');
     } catch (error) {
-        console.error('Error deleting UserProjects:', error);
-        res.status(500).send('Internal Server Error');
+      console.error('Error deleting UserProjects:', error);
+      res.status(500).send('Internal Server Error');
     }
-});
+  });
 
 module.exports = router;
