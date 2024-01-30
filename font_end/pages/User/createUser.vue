@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div>
+    <div class="user-container">
       <h1>Create User</h1>
 
       <v-form @submit.prevent="createUser" class="user-form">
@@ -104,6 +104,9 @@ export default {
 </script>
 
 <style scoped>
+.user-container {
+  margin-left: 20px; /* ปรับค่าตามที่คุณต้องการ */
+}
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
