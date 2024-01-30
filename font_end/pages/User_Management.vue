@@ -13,8 +13,8 @@
           hide-details
         ></v-text-field>
       </v-col>
-      <v-col cols="3" class="text-right">
-        <v-btn color="primary" @click="addUser">+ Add User</v-btn>
+      <v-col cols="2" class="text-right">
+        <v-btn color="primary" class="my-4 mx-4" @click="addUser">+ Add User</v-btn>
       </v-col>
     </v-row>
 
@@ -53,10 +53,10 @@
 
           <v-row class="mb-2">
             <v-col class="text-right" cols="12">
-              <v-btn class="mx-2" color="orange" @click="editUser(user)"
+              <v-btn class="mx-1" color="primary" @click="editUser(user)"
                 >Edit</v-btn
               >
-              <v-btn class="mx-2" color="orange" @click="deleteUser(user)"
+              <v-btn class="mx-4" color="primary" @click="deleteUser(user)"
                 >Delete</v-btn
               >
             </v-col>
