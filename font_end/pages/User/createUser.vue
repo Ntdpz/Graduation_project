@@ -7,9 +7,10 @@
         <v-text-field v-model="user_firstname" label="First Name" required></v-text-field>
         <v-text-field v-model="user_lastname" label="Last Name" required></v-text-field>
         <v-text-field v-model="user_id" label="User ID" required></v-text-field>
-        <v-select v-model="user_position" :items="positions.map((position) => position.name)" label="Position" required></v-select>
+        <v-select v-model="user_position" :items="positions.map((position) => position.name)" label="Position"
+          required></v-select>
         <v-text-field v-model="user_department" label="Department" required></v-text-field>
-        <v-text-field v-model="user_email" label="Email" type="email" required></v-text-field>
+        <v-text-field v-model="user_email" label="Email" type="email" required :rules="[rules.email]"></v-text-field>
         <v-text-field v-model="user_password" label="Password" type="password" required></v-text-field>
         <v-select v-model="user_status" :items="['Active', 'Inactive']" label="Status" required></v-select>
         <v-select v-model="user_role" :items="['Admin', 'User']" label="Role" required></v-select>
@@ -33,6 +34,9 @@
 export default {
   data() {
     return {
+      rules: {
+        email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      },
       user_firstname: "",
       user_lastname: "",
       user_id: "",
@@ -105,8 +109,10 @@ export default {
 
 <style scoped>
 .user-container {
-  margin-left: 20px; /* ปรับค่าตามที่คุณต้องการ */
+  margin-left: 20px;
+  /* ปรับค่าตามที่คุณต้องการ */
 }
+
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
@@ -154,5 +160,4 @@ export default {
 
 .submit-button:hover {
   background-color: #45a049;
-}
-</style>
+}</style>
