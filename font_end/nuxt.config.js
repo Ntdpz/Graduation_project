@@ -1,7 +1,21 @@
-import colors from 'vuetify/es5/util/colors'
+// nuxt.config.js
+
+import colors from 'vuetify/es5/util/colors';
 
 export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  build: {
+    transpile: ['@vuelidate/core'],
+    // คำอธิบายอื่นๆที่คุณอาจต้องการเพิ่ม
+  },
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'user-detail', // ชื่อเส้นทาง
+        path: '/users/:id',  // พาธเส้นทาง
+        component: resolve(__dirname, 'pages/UserDetail.vue'), // ตำแหน่งของไฟล์ UserDetail.vue
+      });
+    },
+  },
   head: {
     titleTemplate: '%s - user_management',
     title: 'user_management',
@@ -19,36 +33,30 @@ export default {
     ]
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
+  axios: {
+    baseURL: 'http://localhost:8080', // แก้ตาม URL ของ API ของคุณ
+  },
+
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://localhost:8080', // แก้ตาม URL ของ API ของคุณ
   },
 
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -67,7 +75,6 @@ export default {
     }
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
-}
+};
