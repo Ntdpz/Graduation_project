@@ -3,7 +3,13 @@
         <v-row no-gutters>
             <v-col>
                 <h1>Morning, Bee</h1>
-                <p>Monday, 07 October 2566</p>
+                <p>Monday, 08 Febauary 2024</p>
+            </v-col>
+        
+            <v-col class="text-right">
+                <v-btn icon @click="handleIconClick">
+                    <v-icon>mdi-plus</v-icon>
+                </v-btn>
             </v-col>
     
             <v-col class="text-right">
@@ -13,15 +19,16 @@
             </v-col>
         </v-row>
     
-        <div class="tracking-work-card mt-6 ml-10" @click="handleTrackingWorkClick">
+        <div class="tracking-work-card mt-6 ml-10" onclick="handleTrackingWorkClick()" style="width: 300px; height: 200px; resize: both; overflow: auto; border: 1px solid #ccc; padding: 10px; box-sizing: border-box;">
             <h2>Tracking work:</h2>
             <div class="work-item">
                 <p>10 Systems</p>
                 <div class="progress-bar">
-                    <div class="progress" :style="{ width: '50%' }"></div>
+                    <div class="progress" style="width: 50%;"></div>
                 </div>
             </div>
         </div>
+        
     </div>
     
     
