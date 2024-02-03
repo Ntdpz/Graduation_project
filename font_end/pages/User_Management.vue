@@ -6,7 +6,7 @@
         <!-- Input for searching users by first name -->
         <v-text-field
           v-model="searchTerm"
-          label="Search by First Name"
+          label="Search"
           prepend-icon="mdi-magnify"
           single-line
           hide-details
@@ -291,6 +291,9 @@ export default {
     searchUsers() {
       this.filteredUsers = this.users.filter(
         (user) =>
+          user.user_position
+            .toLowerCase()
+            .startsWith(this.searchTerm.toLowerCase()) ||
           user.user_firstname
             .toLowerCase()
             .startsWith(this.searchTerm.toLowerCase()) ||
