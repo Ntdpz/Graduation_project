@@ -9,7 +9,7 @@
       </router-link>
 
       <!-- Manage Project Button with router-link -->
-      <router-link to="/manage_project">
+      <router-link to="/Project_Management">
         <v-btn class="button-spacing" color="teal" dark large mt="2" mb="4"
           >Manage Project</v-btn
         >
