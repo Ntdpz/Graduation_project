@@ -6,8 +6,10 @@ const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'))
 const multer = require('multer');
 const fs = require('fs');
 
+// Middleware: เปิดใช้งาน JSON parsing
 router.use(express.json());
 
+// Middleware: เชื่อมต่อกับฐานข้อมูล
 router.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -18,85 +20,46 @@ router.use(async (req, res, next) => {
   }
 });
 
+// Middleware: ตั้งค่า multer สำหรับการอัปโหลดไฟล์
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-// Middleware สำหรับการอัปโหลดไฟล์ภาพ
-const uploadSingle = upload.single('user_pic');
+const uploadSingle = upload.single('user_pic'); // Middleware สำหรับการอัปโหลดไฟล์ภาพ
 
 // API Code
 
+// Route: อัปเดตข้อมูลผู้ใช้
 router.put('/users/:user_id', async (req, res) => {
   try {
-    const {
-      user_firstname,
-      user_lastname,
-      user_position,
-      user_department,
-      user_email,
-      user_password,
-      user_status,
-      user_role
-    } = req.body;
-
     const { user_id } = req.params;
+    const updatedUserFields = {}; // สร้าง object เพื่อเก็บข้อมูลที่ต้องการอัปเดต
 
-    // Create an object to store all fields that need to be updated
-    const updatedUserFields = {};
+    // ตรวจสอบและเพิ่มข้อมูลที่ต้องการอัปเดตลงใน object
+    const fieldsToUpdate = [
+      'user_firstname',
+      'user_lastname',
+      'user_position',
+      'user_department',
+      'user_email',
+      'user_password',
+      'user_status',
+      'user_role',
+    ];
 
-    // Check and add user_firstname if provided
-    if (user_firstname !== undefined) {
-      updatedUserFields.user_firstname = user_firstname;
-    }
+    fieldsToUpdate.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updatedUserFields[field] = req.body[field];
+      }
+    });
 
-    // Check and add user_lastname if provided
-    if (user_lastname !== undefined) {
-      updatedUserFields.user_lastname = user_lastname;
-    }
-
-    // Check and add user_position if provided
-    if (user_position !== undefined) {
-      updatedUserFields.user_position = user_position;
-    }
-
-    // Check and add user_department if provided
-    if (user_department !== undefined) {
-      updatedUserFields.user_department = user_department;
-    }
-
-    // Check and add user_email if provided
-    if (user_email !== undefined) {
-      updatedUserFields.user_email = user_email;
-    }
-
-    // Check and add user_password if provided
-    if (user_password !== undefined) {
-      updatedUserFields.user_password = user_password;
-    }
-
-    // Check and add user_status if provided
-    if (user_status !== undefined) {
-      updatedUserFields.user_status = user_status;
-    }
-
-    // Check and add user_role if provided
-    if (user_role !== undefined) {
-      updatedUserFields.user_role = user_role;
-    }
-
-    // Check if user_pic is provided in the request
+    // ตรวจสอบว่า user_pic ได้รับการส่งมาหรือไม่
     if (req.body.user_pic !== null) {
-      // Convert the image to base64
       const userPicBase64 = req.body.user_pic;
       updatedUserFields.user_pic = userPicBase64;
     } else {
-      // ถ้า client ส่ง user_pic เป็น null ให้ทำการลบภาพออกจากฐานข้อมูล
       updatedUserFields.user_pic = null;
     }
 
-
-
-    // Check if there are fields to update
+    // ตรวจสอบว่ามีข้อมูลที่ต้องการอัปเดตหรือไม่
     if (Object.keys(updatedUserFields).length === 0) {
       return res.status(400).json({ error: 'No fields to update' });
     }
@@ -104,14 +67,10 @@ router.put('/users/:user_id', async (req, res) => {
     const query = 'UPDATE Users SET ? WHERE user_id = ?';
 
     await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [updatedUserFields, user_id],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
+      db.query(query, [updatedUserFields, user_id], (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
     });
 
     res.send('User updated successfully');
@@ -121,40 +80,23 @@ router.put('/users/:user_id', async (req, res) => {
   }
 });
 
-
-
-
-// Route สำหรับสร้างผู้ใช้ใหม่
+// Route: สร้างผู้ใช้ใหม่
 router.post('/users', async (req, res) => {
   try {
     const { Users } = req.body;
 
-    // Check if Users array is provided
     if (!Users || !Array.isArray(Users)) {
       return res.status(400).json({ error: 'Users array is required' });
     }
 
-    // Loop through each user in the array
     for (const user of Users) {
-      const {
-        user_firstname,
-        user_lastname,
-        user_position,
-        user_department,
-        user_email,
-        user_password,
-        user_status,
-        user_role,
-        user_pic,
-        user_id,
-      } = user;
+      const { user_id } = user;
 
-      // Check if user_id is provided for each user
       if (!user_id) {
         return res.status(400).json({ error: 'user_id is required for each user' });
       }
 
-      const userPosition = user_position || 'Default Position';
+      const userPosition = user.user_position || 'Default Position';
 
       const query =
         'INSERT INTO Users (user_firstname, user_lastname, user_position, user_department, user_email, user_password, user_status, user_role, user_pic, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -163,15 +105,15 @@ router.post('/users', async (req, res) => {
         db.query(
           query,
           [
-            user_firstname,
-            user_lastname,
+            user.user_firstname,
+            user.user_lastname,
             userPosition,
-            user_department,
-            user_email,
-            user_password,
-            user_status,
-            user_role,
-            user_pic,
+            user.user_department,
+            user.user_email,
+            user.user_password,
+            user.user_status,
+            user.user_role,
+            user.user_pic,
             user_id,
           ],
           (err, result) => {
@@ -189,8 +131,7 @@ router.post('/users', async (req, res) => {
   }
 });
 
-
-// Function to read a file and convert its content to base64
+// Middleware: อ่านไฟล์และแปลงเป็น base64
 async function getFileAsBase64(filePath) {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, { encoding: 'base64' }, (err, data) => {
@@ -200,9 +141,7 @@ async function getFileAsBase64(filePath) {
   });
 };
 
-
-
-// Route สำหรับลบผู้ใช้
+// Route: ลบผู้ใช้
 router.delete('/users/:user_id', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -223,7 +162,7 @@ router.delete('/users/:user_id', async (req, res) => {
   }
 });
 
-// Route สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
+// Route: ดึงข้อมูลผู้ใช้ทั้งหมด
 router.get('/users', async (req, res) => {
   try {
     await connectToDatabase();
@@ -242,7 +181,8 @@ router.get('/users', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-// Route สำหรับดึงข้อมูลผู้ใช้ด้วย ID
+
+// Route: ดึงข้อมูลผู้ใช้ตาม ID
 router.get('/users/:user_id', async (req, res) => {
   try {
     await connectToDatabase();

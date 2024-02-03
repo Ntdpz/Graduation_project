@@ -1,9 +1,9 @@
-<!-- User_Management.vue -->
 <template>
   <div>
     <!-- Search bar -->
     <v-row>
       <v-col cols="">
+        <!-- Input for searching users by first name -->
         <v-text-field
           v-model="searchTerm"
           label="Search by First Name"
@@ -13,6 +13,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="2" class="text-right">
+        <!-- Button to add a new user -->
         <v-btn color="primary" class="my-4 mx-4" @click="addUser"
           >+ Add User</v-btn
         >
@@ -29,7 +30,9 @@
         cols="12"
         md="4"
       >
+        <!-- User card -->
         <v-card class="mx-auto" max-width="400">
+          <!-- User image -->
           <v-img
             class="align-end text-white"
             height="200"
@@ -42,21 +45,26 @@
             >
           </v-img>
 
+          <!-- User position -->
           <v-card-subtitle class="pt-4">
             {{ user.user_position }}
           </v-card-subtitle>
 
+          <!-- User details -->
           <v-card-text>
             <div>{{ user.user_firstname }} {{ user.user_lastname }}</div>
             <div>{{ user.user_department }}</div>
             <div>{{ user.user_email }}</div>
           </v-card-text>
 
+          <!-- User actions -->
           <v-row class="mb-2">
             <v-col class="text-right" cols="12">
+              <!-- Button to edit user -->
               <v-btn class="mx-1" color="primary" @click="editUser(user)"
                 >Edit</v-btn
               >
+              <!-- Button to delete user -->
               <v-btn class="mx-4" color="primary" @click="deleteUser(user)"
                 >Delete</v-btn
               >
@@ -66,11 +74,12 @@
       </v-col>
     </v-row>
 
-    <!-- เพิ่มฟอร์มแก้ไขข้อมูล -->
+    <!-- Edit User Form Dialog -->
     <v-dialog v-model="editDialog" max-width="600">
       <v-card>
         <v-card-title>Edit User</v-card-title>
         <v-card-text>
+          <!-- Form to edit user details -->
           <v-form @submit.prevent="saveEditedUser">
             <v-text-field
               v-model="editedUser.user_firstname"
@@ -109,23 +118,29 @@
             ></v-select>
             <label for="user_pic">Profile Picture:</label>
             <div>
+              <!-- Input for selecting a new profile picture -->
               <input type="file" @change="handleImageChange" />
             </div>
+            <!-- Button to save changes -->
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
 
+    <!-- Confirm Deletion Dialog -->
     <v-dialog v-model="deleteDialog" max-width="400">
       <v-card>
         <v-card-title>Confirm Deletion</v-card-title>
         <v-card-text>
+          <!-- Confirmation message for user deletion -->
           Are you sure you want to delete {{ userToDelete.user_firstname }}
           {{ userToDelete.user_lastname }}?
         </v-card-text>
         <v-card-actions>
+          <!-- Button to confirm deletion -->
           <v-btn color="primary" @click="deleteConfirmed">Yes</v-btn>
+          <!-- Button to cancel deletion -->
           <v-btn color="error" @click="cancelDelete">No</v-btn>
         </v-card-actions>
       </v-card>
@@ -136,19 +151,24 @@
 <script>
 export default {
   methods: {
+    // Navigate back to the User Management page
     navigateBack() {
       this.$router.push("/User_Management");
     },
+    // Navigate to the 'Add User' page
     addUser() {
       this.$router.push("/User/createUser");
     },
+    // View details of a specific user
     async viewDetails(user) {
       this.$router.push({ name: "user-detail", params: { id: user.user_id } });
     },
+    // Edit user details
     editUser(user) {
       this.editedUser = { ...user };
       this.editDialog = true;
     },
+    // Helper function to read a file and convert it to base64
     async getFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         try {
@@ -167,25 +187,25 @@ export default {
         }
       });
     },
-
+    // Handle the change of the selected image file
     async handleImageChange(event) {
       const file = event.target.files[0];
 
       if (file) {
         try {
           const base64Image = await this.getFileAsBase64(file);
-          this.image = file; // เพิ่มบรรทัดนี้เพื่อเก็บไฟล์ที่เลือกไว้ใน property ชื่อ image
-          this.editedUser.user_pic = base64Image; // เพิ่มบรรทัดนี้เพื่อเซ็ตรูปภาพใน editedUser
+          this.image = file;
+          this.editedUser.user_pic = base64Image;
         } catch (error) {
           console.error("Error reading or converting file:", error);
         }
       } else {
-        // เพิ่ม else นี้เพื่อตั้งค่า user_pic เป็น null ในกรณีไม่มีไฟล์ถูกเลือก
-        this.image = null; // เพิ่มบรรทัดนี้เพื่อเคลียร์ไฟล์ที่เลือกเมื่อไม่มีไฟล์ถูกเลือก
+        // Set user_pic to null if no file is selected
+        this.image = null;
         this.editedUser.user_pic = null;
       }
     },
-
+    // Action to delete a user
     async deleteUserAction(user) {
       try {
         const response = await this.$axios.delete(
@@ -200,38 +220,39 @@ export default {
         console.error("Error deleting user:", error.response.data);
       }
     },
+    // Save edited user details
     async saveEditedUser() {
-      // ตรวจสอบว่า this.editedUser และ this.image มีโครงสร้างที่ถูกต้อง
+      // Check the structure of this.editedUser and this.image
       console.log(this.editedUser);
       console.log(this.image);
 
-      // แปลงไฟล์รูปภาพให้อยู่ในรูปแบบ encoded base64 (หากใช้)
+      // Convert the image file to base64 format (if applicable)
       const imageData = this.image
         ? await this.getFileAsBase64(this.image)
         : null;
 
-      // ตรวจสอบว่ามีการเลือกรูปภาพหรือไม่
+      // Check if an image file is selected
       if (imageData !== null) {
-        // ส่ง request ไปยัง API ด้วย method PUT
+        // Send a PUT request to the API to update the user with the new image
         this.$axios
           .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
             ...this.editedUser,
-            user_pic: imageData, // ใช้ข้อมูลรูปภาพที่แปลงแล้ว
+            user_pic: imageData,
           })
           .then((response) => {
             console.log("User updated successfully:", response.data);
 
-            // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
+            // After updating, close the edit dialog
             this.editDialog = false;
 
-            // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
+            // After closing the edit dialog, refresh the user data by calling the API GET again
             this.refreshUsersData();
           })
           .catch((error) => {
             console.error("Error updating user:", error.response.data);
           });
       } else {
-        // ถ้าไม่มีการเลือกรูปภาพใหม่ ให้แก้ไขข้อมูลปกติโดยไม่รวมภาพ
+        // If no new image is selected, edit the user data without including the image
         this.$axios
           .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
             ...this.editedUser,
@@ -239,10 +260,10 @@ export default {
           .then((response) => {
             console.log("User updated successfully:", response.data);
 
-            // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
+            // After updating, close the edit dialog
             this.editDialog = false;
 
-            // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
+            // After closing the edit dialog, refresh the user data by calling the API GET again
             this.refreshUsersData();
           })
           .catch((error) => {
@@ -250,7 +271,7 @@ export default {
           });
       }
     },
-
+    // Helper function to read a file and convert it to base64
     async getFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -259,13 +280,14 @@ export default {
         reader.onerror = (error) => reject(error);
       });
     },
-
+    // Refresh user data by calling the API GET
     async refreshUsersData() {
       const response = await this.$axios.get("http://localhost:8080/api/users");
       this.users = response.data;
 
       this.searchUsers();
     },
+    // Filter users based on the search term
     searchUsers() {
       this.filteredUsers = this.users.filter(
         (user) =>
@@ -283,17 +305,17 @@ export default {
             .startsWith(this.searchTerm.toLowerCase())
       );
     },
-
+    // Action to initiate user deletion
     async deleteUser(user) {
       this.userToDelete = user;
       this.deleteDialog = true;
     },
-
+    // Action to confirm user deletion
     deleteConfirmed() {
       this.deleteUserAction(this.userToDelete);
       this.deleteDialog = false;
     },
-
+    // Action to cancel user deletion
     cancelDelete() {
       this.deleteDialog = false;
     },
@@ -318,13 +340,15 @@ export default {
     };
   },
   async mounted() {
+    // Fetch user data from the API on component mount
     const response = await this.$axios.get("http://localhost:8080/api/users");
     this.users = response.data;
 
+    // Initialize filteredUsers with all users on mount
     this.filteredUsers = this.users;
   },
   watch: {
-    searchTerm: "searchUsers",
+    searchTerm: "searchUsers", // Watch for changes in searchTerm and trigger searchUsers
   },
 };
 </script>
