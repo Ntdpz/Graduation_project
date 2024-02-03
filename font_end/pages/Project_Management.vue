@@ -27,8 +27,7 @@
                     <div class="progress" style="width: 50%;"></div>
                 </div>
             </div>
-        </div>        
-        
+        </div>            
     </div>  
 </template>
   
@@ -81,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-
 h1 {
     margin-bottom: 10px;
 }
