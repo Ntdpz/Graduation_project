@@ -1,19 +1,19 @@
-<!-- User_Management.vue -->
-
 <template>
   <div>
     <!-- Search bar -->
     <v-row>
       <v-col cols="">
+        <!-- Input for searching users by first name -->
         <v-text-field
           v-model="searchTerm"
-          label="Search by First Name"
+          label="Search"
           prepend-icon="mdi-magnify"
           single-line
           hide-details
         ></v-text-field>
       </v-col>
       <v-col cols="2" class="text-right">
+        <!-- Button to add a new user -->
         <v-btn color="primary" class="my-4 mx-4" @click="addUser"
           >+ Add User</v-btn
         >
@@ -30,7 +30,9 @@
         cols="12"
         md="4"
       >
+        <!-- User card -->
         <v-card class="mx-auto" max-width="400">
+          <!-- User image -->
           <v-img
             class="align-end text-white"
             height="200"
@@ -43,21 +45,26 @@
             >
           </v-img>
 
+          <!-- User position -->
           <v-card-subtitle class="pt-4">
             {{ user.user_position }}
           </v-card-subtitle>
 
+          <!-- User details -->
           <v-card-text>
             <div>{{ user.user_firstname }} {{ user.user_lastname }}</div>
             <div>{{ user.user_department }}</div>
             <div>{{ user.user_email }}</div>
           </v-card-text>
 
+          <!-- User actions -->
           <v-row class="mb-2">
             <v-col class="text-right" cols="12">
+              <!-- Button to edit user -->
               <v-btn class="mx-1" color="primary" @click="editUser(user)"
                 >Edit</v-btn
               >
+              <!-- Button to delete user -->
               <v-btn class="mx-4" color="primary" @click="deleteUser(user)"
                 >Delete</v-btn
               >
@@ -67,11 +74,12 @@
       </v-col>
     </v-row>
 
-    <!-- เพิ่มฟอร์มแก้ไขข้อมูล -->
+    <!-- Edit User Form Dialog -->
     <v-dialog v-model="editDialog" max-width="600">
       <v-card>
         <v-card-title>Edit User</v-card-title>
         <v-card-text>
+          <!-- Form to edit user details -->
           <v-form @submit.prevent="saveEditedUser">
             <v-text-field
               v-model="editedUser.user_firstname"
@@ -81,10 +89,11 @@
               v-model="editedUser.user_lastname"
               label="Last Name"
             ></v-text-field>
-            <v-text-field
+            <v-select
               v-model="editedUser.user_position"
+              :items="positions.map((position) => position.name)"
               label="Position"
-            ></v-text-field>
+            ></v-select>
             <v-text-field
               v-model="editedUser.user_department"
               label="Department"
@@ -97,35 +106,41 @@
               v-model="editedUser.user_password"
               label="Password"
             ></v-text-field>
-            <v-text-field
+            <v-select
               v-model="editedUser.user_status"
+              :items="statuses"
               label="Status"
-            ></v-text-field>
-            <v-text-field
+            ></v-select>
+            <v-select
               v-model="editedUser.user_role"
+              :items="roles"
               label="Role"
-            ></v-text-field>
-            <!-- เพิ่มเขตข้อมูลสำหรับรูปภาพ (ถ้าต้องการ) -->
-            <v-file-input
-              label="Image"
-              accept="image/*"
-              @change="handleImageChange"
-            ></v-file-input>
+            ></v-select>
+            <label for="user_pic">Profile Picture:</label>
+            <div>
+              <!-- Input for selecting a new profile picture -->
+              <input type="file" @change="handleImageChange" />
+            </div>
+            <!-- Button to save changes -->
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
 
+    <!-- Confirm Deletion Dialog -->
     <v-dialog v-model="deleteDialog" max-width="400">
       <v-card>
         <v-card-title>Confirm Deletion</v-card-title>
         <v-card-text>
+          <!-- Confirmation message for user deletion -->
           Are you sure you want to delete {{ userToDelete.user_firstname }}
           {{ userToDelete.user_lastname }}?
         </v-card-text>
         <v-card-actions>
+          <!-- Button to confirm deletion -->
           <v-btn color="primary" @click="deleteConfirmed">Yes</v-btn>
+          <!-- Button to cancel deletion -->
           <v-btn color="error" @click="cancelDelete">No</v-btn>
         </v-card-actions>
       </v-card>
@@ -136,22 +151,61 @@
 <script>
 export default {
   methods: {
+    // Navigate back to the User Management page
     navigateBack() {
       this.$router.push("/User_Management");
     },
+    // Navigate to the 'Add User' page
     addUser() {
       this.$router.push("/User/createUser");
     },
+    // View details of a specific user
     async viewDetails(user) {
       this.$router.push({ name: "user-detail", params: { id: user.user_id } });
     },
+    // Edit user details
     editUser(user) {
       this.editedUser = { ...user };
       this.editDialog = true;
     },
-    handleImageChange(files) {
-      this.image = files[0];
+    // Helper function to read a file and convert it to base64
+    async getFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        try {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+
+          reader.onerror = (error) => {
+            reject(error);
+          };
+        } catch (error) {
+          reject(error);
+        }
+      });
     },
+    // Handle the change of the selected image file
+    async handleImageChange(event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        try {
+          const base64Image = await this.getFileAsBase64(file);
+          this.image = file;
+          this.editedUser.user_pic = base64Image;
+        } catch (error) {
+          console.error("Error reading or converting file:", error);
+        }
+      } else {
+        // Set user_pic to null if no file is selected
+        this.image = null;
+        this.editedUser.user_pic = null;
+      }
+    },
+    // Action to delete a user
     async deleteUserAction(user) {
       try {
         const response = await this.$axios.delete(
@@ -166,33 +220,58 @@ export default {
         console.error("Error deleting user:", error.response.data);
       }
     },
-    saveEditedUser() {
-      // ตรวจสอบว่า this.editedUser และ this.image มีโครงสร้างที่ถูกต้อง
+    // Save edited user details
+    async saveEditedUser() {
+      // Check the structure of this.editedUser and this.image
       console.log(this.editedUser);
       console.log(this.image);
 
-      // แปลงไฟล์รูปภาพให้อยู่ในรูปแบบ encoded base64 (หากใช้)
-      const imageData = this.image ? this.getFileAsBase64(this.image) : null;
+      // Convert the image file to base64 format (if applicable)
+      const imageData = this.image
+        ? await this.getFileAsBase64(this.image)
+        : null;
 
-      // ส่ง request ไปยัง API ด้วย method PUT
-      this.$axios
-        .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
-          ...this.editedUser,
-          user_pic: imageData, // ใช้ข้อมูลรูปภาพที่แปลงแล้ว
-        })
-        .then((response) => {
-          console.log("User updated successfully:", response.data);
+      // Check if an image file is selected
+      if (imageData !== null) {
+        // Send a PUT request to the API to update the user with the new image
+        this.$axios
+          .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
+            ...this.editedUser,
+            user_pic: imageData,
+          })
+          .then((response) => {
+            console.log("User updated successfully:", response.data);
 
-          // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
-          this.editDialog = false;
+            // After updating, close the edit dialog
+            this.editDialog = false;
 
-          // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
-          this.refreshUsersData();
-        })
-        .catch((error) => {
-          console.error("Error updating user:", error.response.data);
-        });
+            // After closing the edit dialog, refresh the user data by calling the API GET again
+            this.refreshUsersData();
+          })
+          .catch((error) => {
+            console.error("Error updating user:", error.response.data);
+          });
+      } else {
+        // If no new image is selected, edit the user data without including the image
+        this.$axios
+          .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
+            ...this.editedUser,
+          })
+          .then((response) => {
+            console.log("User updated successfully:", response.data);
+
+            // After updating, close the edit dialog
+            this.editDialog = false;
+
+            // After closing the edit dialog, refresh the user data by calling the API GET again
+            this.refreshUsersData();
+          })
+          .catch((error) => {
+            console.error("Error updating user:", error.response.data);
+          });
+      }
     },
+    // Helper function to read a file and convert it to base64
     async getFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -201,16 +280,20 @@ export default {
         reader.onerror = (error) => reject(error);
       });
     },
-
+    // Refresh user data by calling the API GET
     async refreshUsersData() {
       const response = await this.$axios.get("http://localhost:8080/api/users");
       this.users = response.data;
 
       this.searchUsers();
     },
+    // Filter users based on the search term
     searchUsers() {
       this.filteredUsers = this.users.filter(
         (user) =>
+          user.user_position
+            .toLowerCase()
+            .startsWith(this.searchTerm.toLowerCase()) ||
           user.user_firstname
             .toLowerCase()
             .startsWith(this.searchTerm.toLowerCase()) ||
@@ -225,23 +308,30 @@ export default {
             .startsWith(this.searchTerm.toLowerCase())
       );
     },
-
+    // Action to initiate user deletion
     async deleteUser(user) {
       this.userToDelete = user;
       this.deleteDialog = true;
     },
-
+    // Action to confirm user deletion
     deleteConfirmed() {
       this.deleteUserAction(this.userToDelete);
       this.deleteDialog = false;
     },
-
+    // Action to cancel user deletion
     cancelDelete() {
       this.deleteDialog = false;
     },
   },
   data() {
     return {
+      positions: [
+        { id: 1, name: "Manager" },
+        { id: 2, name: "Developer" },
+        { id: 3, name: "Designer" },
+      ],
+      statuses: ["Active", "Inactive"],
+      roles: ["Admin", "User"],
       users: [],
       searchTerm: "",
       filteredUsers: [],
@@ -253,13 +343,15 @@ export default {
     };
   },
   async mounted() {
+    // Fetch user data from the API on component mount
     const response = await this.$axios.get("http://localhost:8080/api/users");
     this.users = response.data;
 
+    // Initialize filteredUsers with all users on mount
     this.filteredUsers = this.users;
   },
   watch: {
-    searchTerm: "searchUsers",
+    searchTerm: "searchUsers", // Watch for changes in searchTerm and trigger searchUsers
   },
 };
 </script>
@@ -267,47 +359,3 @@ export default {
 <style scoped>
 /* Add any additional styles if needed */
 </style>
-"
-
-Code API : "router.put('/users/:user_id', async (req, res) => {
-  try {
-    const { user_firstname, user_position } = req.body;
-    const { user_id } = req.params;
-
-    // Create an object to store only the fields that need to be updated
-    const updatedUserFields = {};
-
-    // Check and add user_firstname if provided
-    if (user_firstname !== undefined) {
-      updatedUserFields.user_firstname = user_firstname;
-    }
-
-    // Check and add user_position if provided
-    if (user_position !== undefined) {
-      updatedUserFields.user_position = user_position;
-    }
-
-    // Check if there are fields to update
-    if (Object.keys(updatedUserFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update' });
-    }
-
-    const query = 'UPDATE Users SET ? WHERE user_id = ?';
-
-    await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [updatedUserFields, user_id],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
-    });
-
-    res.send('User updated successfully');
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});

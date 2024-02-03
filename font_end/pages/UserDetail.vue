@@ -1,11 +1,15 @@
-<!-- UserDetail.vue -->
-
 <template>
   <v-card
     :loading="loading"
     class="mx-auto my-12 custom-card"
     max-width="60%"
-    style="width: 100vw; height: 100vh; max-height: 70vh; display: flex; align-items: center;"
+    style="
+      width: 100vw;
+      height: 100vh;
+      max-height: 70vh;
+      display: flex;
+      align-items: center;
+    "
   >
     <div class="aspect-ratio-container">
       <div class="centered-content">
@@ -19,12 +23,13 @@
     </div>
 
     <div class="user-details">
-      <v-card-item>
-        <v-card-title @click="goBack">Name: {{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
-        <v-card-subtitle>
-          <span class="me-1">Position: {{ user.user_position }}</span>
-        </v-card-subtitle>
-      </v-card-item>
+      <!-- ไม่ต้อง import คอมโพเนนต์ที่ไม่มีอยู่จริง -->
+      <v-card-title @click="goBack"
+        >Name: {{ user.user_firstname }} {{ user.user_lastname }}</v-card-title
+      >
+      <v-card-subtitle>
+        <span class="me-1">Position: {{ user.user_position }}</span>
+      </v-card-subtitle>
 
       <v-card-text>
         <v-row align="center" class="mx-0">
@@ -70,6 +75,8 @@
 </template>
 
 <script>
+// ไม่ต้อง import คอมโพเนนต์ที่ไม่มีอยู่จริง
+
 export default {
   data() {
     return {
@@ -103,7 +110,7 @@ export default {
 .aspect-ratio-container {
   position: relative;
   width: 50%;
-  padding-bottom: 50%; /* ปรับค่า Aspect Ratio เป็น 1:1 */
+  padding-bottom: 50%;
   overflow: hidden;
 }
 
