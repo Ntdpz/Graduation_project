@@ -8,7 +8,10 @@
             
             <v-col class="text-left">
                 <v-btn icon @click="handleIconClick">
+                  <router-link to="/project/createProject">
                     <v-icon>mdi-plus</v-icon>
+                  </router-link>
+                    
                 </v-btn>
             </v-col>
         
@@ -17,17 +20,7 @@
                     <p>All Projects</p>
                 </v-btn>
             </v-col>
-        </v-row>                        
-    
-        <div class="tracking-work-card mt-6 ml-10" onclick="handleTrackingWorkClick()" style="width: 300px; height: 150px;  border: 1px solid #ccc; padding: 10px; box-sizing: border-box; border-radius: 10px;">
-            <h2>Tracking work:</h2>
-            <div class="work-item">
-                <p>10 Systems</p>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 50%;"></div>
-                </div>
-            </div>
-        </div>            
+        </v-row>                                 
     </div>  
 </template>
 
@@ -131,5 +124,8 @@ p {
     /* For example, you can set a background color or define a max-width */
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
