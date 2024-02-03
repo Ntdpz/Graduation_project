@@ -4,16 +4,62 @@
       <h1>Create User</h1>
 
       <v-form @submit.prevent="createUser" class="user-form">
-        <v-text-field v-model="user_firstname" label="First Name" required></v-text-field>
-        <v-text-field v-model="user_lastname" label="Last Name" required></v-text-field>
-        <v-text-field v-model="user_id" label="User ID" required></v-text-field>
-        <v-select v-model="user_position" :items="positions.map((position) => position.name)" label="Position"
-          required></v-select>
-        <v-text-field v-model="user_department" label="Department" required></v-text-field>
-        <v-text-field v-model="user_email" label="Email" type="email" required :rules="[rules.email]"></v-text-field>
-        <v-text-field v-model="user_password" label="Password" type="password" required></v-text-field>
-        <v-select v-model="user_status" :items="['Active', 'Inactive']" label="Status" required></v-select>
-        <v-select v-model="user_role" :items="['Admin', 'User']" label="Role" required></v-select>
+        <v-text-field
+          v-model="user_firstname"
+          label="First Name"
+          required
+          :rules="[rules.required]"
+        ></v-text-field>
+        <v-text-field
+          v-model="user_lastname"
+          label="Last Name"
+          required
+          :rules="[rules.required]"
+        ></v-text-field>
+        <v-text-field
+          v-model="user_id"
+          label="User ID"
+          required
+          :rules="[rules.required]"
+        ></v-text-field>
+        <v-select
+          v-model="user_position"
+          :items="positions.map((position) => position.name)"
+          label="Position"
+          required
+          :rules="[rules.required]"
+        ></v-select>
+        <v-text-field
+          v-model="user_department"
+          label="Department"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model="user_email"
+          label="Email"
+          type="email"
+          required
+          :rules="[rules.email]"
+        ></v-text-field>
+        <v-text-field
+          v-model="user_password"
+          label="Password"
+          type="password"
+          required
+          :rules="[rules.required]"
+        ></v-text-field>
+        <v-select
+          v-model="user_status"
+          :items="['Active', 'Inactive']"
+          label="Status"
+          required
+        ></v-select>
+        <v-select
+          v-model="user_role"
+          :items="['Admin', 'User']"
+          label="Role"
+          required
+        ></v-select>
 
         <label for="user_pic">Profile Picture:</label>
         <div>
@@ -31,11 +77,14 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
       rules: {
-        email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        required: (value) => !!value || "This field is required",
+        email: (value) => /.+@.+\..+/.test(value) || "E-mail must be valid",
       },
       user_firstname: "",
       user_lastname: "",
@@ -59,6 +108,25 @@ export default {
   methods: {
     async createUser() {
       try {
+        // ตรวจสอบว่ามีข้อมูลทุกช่องหรือไม่
+        if (
+          !this.user_firstname ||
+          !this.user_lastname ||
+          !this.user_id ||
+          !this.user_position ||
+          !this.user_department ||
+          !this.user_email ||
+          !this.user_password
+        ) {
+          // แสดง SweetAlert2 แจ้งเตือนถ้าข้อมูลไม่ครบ
+          await Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+          });
+          return; // ออกจากเมธอดเพื่อไม่ทำต่อ
+        }
+
         const formData = new FormData();
         formData.append("user_pic", this.user_pic);
 
@@ -81,12 +149,27 @@ export default {
 
         console.log("User created successfully:", response.data);
 
-        this.showSuccessSnackbar();
+        // แสดง SweetAlert2 ถ้าสำเร็จ
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "User created successfully!",
+        });
 
+        // นำกลับไปที่หน้า User_Management
+        this.$router.push("/User_Management");
       } catch (error) {
         console.error("Error creating user:", error.response.data);
+
+        // แสดง SweetAlert2 ถ้าไม่สำเร็จ
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "User creation failed. Please try again.",
+        });
       }
     },
+
     handleFileChange(event) {
       const file = event.target.files[0];
 
@@ -160,4 +243,5 @@ export default {
 
 .submit-button:hover {
   background-color: #45a049;
-}</style>
+}
+</style>
