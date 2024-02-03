@@ -18,106 +18,8 @@ router.use(async (req, res, next) => {
   }
 });
 
-<<<<<<< HEAD
 //login API
 router.post('/login', async (req, res) => {
-=======
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Middleware สำหรับการอัปโหลดไฟล์ภาพ
-const uploadSingle = upload.single('user_pic');
-
-router.put('/users/:user_id', async (req, res) => {
-  console.log(req.body);
-  try {
-    const {
-      user_firstname,
-      user_lastname,
-      user_position,
-      user_department,
-      user_email,
-      user_password,
-      user_status,
-      user_role
-    } = req.body;
-
-    const { user_id } = req.params;
-
-    // Create an object to store all fields that need to be updated
-    const updatedUserFields = {};
-
-    // Check and add user_firstname if provided
-    if (user_firstname !== undefined) {
-      updatedUserFields.user_firstname = user_firstname;
-    }
-
-    // Check and add user_lastname if provided
-    if (user_lastname !== undefined) {
-      updatedUserFields.user_lastname = user_lastname;
-    }
-
-    // Check and add user_position if provided
-    if (user_position !== undefined) {
-      updatedUserFields.user_position = user_position;
-    }
-
-    // Check and add user_department if provided
-    if (user_department !== undefined) {
-      updatedUserFields.user_department = user_department;
-    }
-
-    // Check and add user_email if provided
-    if (user_email !== undefined) {
-      updatedUserFields.user_email = user_email;
-    }
-
-    // Check and add user_password if provided
-    if (user_password !== undefined) {
-      updatedUserFields.user_password = user_password;
-    }
-
-    // Check and add user_status if provided
-    if (user_status !== undefined) {
-      updatedUserFields.user_status = user_status;
-    }
-
-    // Check and add user_role if provided
-    if (user_role !== undefined) {
-      updatedUserFields.user_role = user_role;
-    }
-
-    // Check if there are fields to update
-    if (Object.keys(updatedUserFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update' });
-    }
-
-    const query = 'UPDATE Users SET ? WHERE user_id = ?';
-
-    await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [updatedUserFields, user_id],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
-    });
-
-    res.send('User updated successfully');
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-
-// Route สำหรับสร้างผู้ใช้ใหม่
-router.post('/users', async (req, res) => {
-  try {
-    const { Users } = req.body;
->>>>>>> WEEK1
 
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
@@ -210,7 +112,6 @@ router.post('/users', async (req, res) => {
   });
 
 
-<<<<<<< HEAD
   // Route สำหรับสร้างผู้ใช้ใหม่
   router.post('/users', async (req, res) => {
     try {
@@ -301,32 +202,6 @@ router.post('/users', async (req, res) => {
           if (err) reject(err);
           resolve(result);
         });
-=======
-
-// Function to read a file and convert its content to base64
-async function getFileAsBase64(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, { encoding: 'base64' }, (err, data) => {
-      if (err) reject(err);
-      resolve(data);
-    });
-  });
-};
-
-
-
-// Route สำหรับลบผู้ใช้
-router.delete('/users/:user_id', async (req, res) => {
-  try {
-    const { user_id } = req.params;
-
-    const query = 'DELETE FROM Users WHERE user_id = ?';
-
-    await new Promise((resolve, reject) => {
-      db.query(query, [user_id], (err, result) => {
-        if (err) reject(err);
-        resolve(result);
->>>>>>> WEEK1
       });
 
       res.send('User deleted successfully');
