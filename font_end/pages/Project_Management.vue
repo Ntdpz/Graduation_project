@@ -5,15 +5,13 @@
                 <h1>{{ greeting }}, Bee</h1>
                 <p>{{ currentDateTime }}</p>
             </v-col>
-
+            
             <v-col class="text-left">
                 <v-btn icon @click="handleIconClick">
-                    <router-link to="/project/createProject">
-                        <v-icon>mdi-plus</v-icon>
-                    </router-link>
+                    <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </v-col>
-
+        
             <v-col class="text-right" style="margin-right: 16px;"> 
                 <v-btn class="work-item" @click="handleButtonClick">
                     <p>All Projects</p>
@@ -21,55 +19,80 @@
             </v-col>
         </v-row>                        
     
-                  
+        <div class="tracking-work-card mt-6 ml-10" onclick="handleTrackingWorkClick()" style="width: 300px; height: 150px;  border: 1px solid #ccc; padding: 10px; box-sizing: border-box; border-radius: 10px;">
+            <h2>Tracking work:</h2>
+            <div class="work-item">
+                <p>10 Systems</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 50%;"></div>
+                </div>
+            </div>
+        </div>            
     </div>  
 </template>
 
 <script>
 export default {
-    name: 'Dashboard',
-    data() {
-        return {
-            greeting: '',
-            currentDateTime: ''
-        };
+  name: "ProjectManagement",
+  data() {
+    return {
+      greeting: "",
+      currentDateTime: "",
+      projects: [],
+    };
+  },
+  methods: {
+    handleIconClick() {
+      // Add your logic for icon click
     },
-    methods: {
-        handleIconClick() {
-            // Add your logic for icon click
-        },
-        handleButtonClick() {
-            // Add your logic for button click
-        },
-        handleTrackingWorkClick() {
-            // Add your logic for tracking work click
-        },
-        updateDateTime() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
-
-            this.greeting = this.getGreeting(now);
-            this.currentDateTime = now.toLocaleDateString('en-US', options);
-        },
-        getGreeting(date) {
-            const hour = date.getHours();
-
-            if (hour >= 0 && hour < 12) {
-                return 'Good Morning';
-            } else if (hour >= 12 && hour < 18) {
-                return 'Good Afternoon';
-            } else {
-                return 'Good Evening';
-            }
-        },
+    handleButtonClick() {
+      // Add your logic for button click
     },
-    mounted() {
-        // Initial update
-        this.updateDateTime();
-
-        // Update every second
-        setInterval(this.updateDateTime, 1000);
+    async fetchProjects() {
+      try {
+        const response = await this.$axios.get("/api/projects"); // Adjust the endpoint accordingly
+        this.projects = response.data;
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
     },
+    handleTrackingWorkClick(project) {
+      // Add your logic for tracking work click using project data
+      console.log("Clicked on project:", project);
+    },
+    updateDateTime() {
+      const now = new Date();
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+      };
+
+      this.greeting = this.getGreeting(now);
+      this.currentDateTime = now.toLocaleDateString("en-US", options);
+    },
+    getGreeting(date) {
+      const hour = date.getHours();
+
+      if (hour >= 0 && hour < 12) {
+        return "Good Morning";
+      } else if (hour >= 12 && hour < 18) {
+        return "Good Afternoon";
+      } else {
+        return "Good Evening";
+      }
+    },
+  },
+  mounted() {
+    this.updateDateTime();
+    this.fetchProjects();
+    setInterval(this.updateDateTime, 1000);
+  },
 };
 </script>
 
@@ -108,8 +131,5 @@ p {
     /* For example, you can set a background color or define a max-width */
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 </style>
