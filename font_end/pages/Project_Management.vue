@@ -19,36 +19,36 @@
       </v-col>
     </v-row>
 
-    <div
-      class="tracking-work-card mt-6 ml-10"
-      onclick="handleTrackingWorkClick()"
-      style="
-        width: 300px;
-        height: 150px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        box-sizing: border-box;
-        border-radius: 10px;
-      "
-    >
-      <h2>Tracking work:</h2>
-      <div class="work-item">
-        <p>10 Systems</p>
-        <div class="progress-bar">
-          <div class="progress" style="width: 50%"></div>
-        </div>
-      </div>
-    </div>
+    <v-row>
+      <v-card
+        v-for="project in projects"
+        :key="project.project_id"
+        class="tracking-work-card mt-6 ml-10"
+        @click="handleTrackingWorkClick(project)"
+      >
+        <v-card-title>
+          <h2>{{ project.project_name_TH }}</h2>
+        </v-card-title>
+        <v-card-text>
+          <div class="work-item">
+            <p>{{ project.project_progress }}% Progress</p>
+            <p>Planned Start: {{ project.project_plan_start }}</p>
+            <p>Planned End: {{ project.project_plan_end }}</p>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-row>
   </div>
 </template>
-  
+
 <script>
 export default {
-  name: "Dashboard",
+  name: "ProjectManagement",
   data() {
     return {
       greeting: "",
       currentDateTime: "",
+      projects: [],
     };
   },
   methods: {
@@ -58,8 +58,17 @@ export default {
     handleButtonClick() {
       // Add your logic for button click
     },
-    handleTrackingWorkClick() {
-      // Add your logic for tracking work click
+    async fetchProjects() {
+      try {
+        const response = await this.$axios.get("/api/projects"); // Adjust the endpoint accordingly
+        this.projects = response.data;
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    },
+    handleTrackingWorkClick(project) {
+      // Add your logic for tracking work click using project data
+      console.log("Clicked on project:", project);
     },
     updateDateTime() {
       const now = new Date();
@@ -90,49 +99,13 @@ export default {
     },
   },
   mounted() {
-    // Initial update
     this.updateDateTime();
-
-    // Update every second
+    this.fetchProjects();
     setInterval(this.updateDateTime, 1000);
   },
 };
 </script>
 
 <style scoped>
-h1 {
-  margin-bottom: 10px;
-}
-
-p {
-  margin: 0;
-}
-
-.tracking-work {
-  display: flex;
-  justify-content: space-between;
-}
-
-.work-item {
-  width: 45%;
-}
-
-.progress-bar {
-  background-color: #e0e0e0;
-  height: 10px;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress {
-  background-color: #4caf50;
-  height: 100%;
-}
-
-.dashboard {
-  /* Add any additional styles specific to the dashboard component */
-  /* For example, you can set a background color or define a max-width */
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* Add your styles here */
 </style>
