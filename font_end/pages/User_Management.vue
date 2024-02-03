@@ -1,5 +1,4 @@
 <!-- User_Management.vue -->
-
 <template>
   <div>
     <!-- Search bar -->
@@ -81,10 +80,11 @@
               v-model="editedUser.user_lastname"
               label="Last Name"
             ></v-text-field>
-            <v-text-field
+            <v-select
               v-model="editedUser.user_position"
+              :items="positions.map((position) => position.name)"
               label="Position"
-            ></v-text-field>
+            ></v-select>
             <v-text-field
               v-model="editedUser.user_department"
               label="Department"
@@ -97,20 +97,20 @@
               v-model="editedUser.user_password"
               label="Password"
             ></v-text-field>
-            <v-text-field
+            <v-select
               v-model="editedUser.user_status"
+              :items="statuses"
               label="Status"
-            ></v-text-field>
-            <v-text-field
+            ></v-select>
+            <v-select
               v-model="editedUser.user_role"
+              :items="roles"
               label="Role"
-            ></v-text-field>
-            <!-- เพิ่มเขตข้อมูลสำหรับรูปภาพ (ถ้าต้องการ) -->
-            <v-file-input
-              label="Image"
-              accept="image/*"
-              @change="handleImageChange"
-            ></v-file-input>
+            ></v-select>
+            <label for="user_pic">Profile Picture:</label>
+            <div>
+              <input type="file" @change="handleImageChange" />
+            </div>
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
         </v-card-text>
@@ -149,9 +149,43 @@ export default {
       this.editedUser = { ...user };
       this.editDialog = true;
     },
-    handleImageChange(files) {
-      this.image = files[0];
+    async getFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        try {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+
+          reader.onerror = (error) => {
+            reject(error);
+          };
+        } catch (error) {
+          reject(error);
+        }
+      });
     },
+
+    async handleImageChange(event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        try {
+          const base64Image = await this.getFileAsBase64(file);
+          this.image = file; // เพิ่มบรรทัดนี้เพื่อเก็บไฟล์ที่เลือกไว้ใน property ชื่อ image
+          this.editedUser.user_pic = base64Image; // เพิ่มบรรทัดนี้เพื่อเซ็ตรูปภาพใน editedUser
+        } catch (error) {
+          console.error("Error reading or converting file:", error);
+        }
+      } else {
+        // เพิ่ม else นี้เพื่อตั้งค่า user_pic เป็น null ในกรณีไม่มีไฟล์ถูกเลือก
+        this.image = null; // เพิ่มบรรทัดนี้เพื่อเคลียร์ไฟล์ที่เลือกเมื่อไม่มีไฟล์ถูกเลือก
+        this.editedUser.user_pic = null;
+      }
+    },
+
     async deleteUserAction(user) {
       try {
         const response = await this.$axios.delete(
@@ -166,33 +200,57 @@ export default {
         console.error("Error deleting user:", error.response.data);
       }
     },
-    saveEditedUser() {
+    async saveEditedUser() {
       // ตรวจสอบว่า this.editedUser และ this.image มีโครงสร้างที่ถูกต้อง
       console.log(this.editedUser);
       console.log(this.image);
 
       // แปลงไฟล์รูปภาพให้อยู่ในรูปแบบ encoded base64 (หากใช้)
-      const imageData = this.image ? this.getFileAsBase64(this.image) : null;
+      const imageData = this.image
+        ? await this.getFileAsBase64(this.image)
+        : null;
 
-      // ส่ง request ไปยัง API ด้วย method PUT
-      this.$axios
-        .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
-          ...this.editedUser,
-          user_pic: imageData, // ใช้ข้อมูลรูปภาพที่แปลงแล้ว
-        })
-        .then((response) => {
-          console.log("User updated successfully:", response.data);
+      // ตรวจสอบว่ามีการเลือกรูปภาพหรือไม่
+      if (imageData !== null) {
+        // ส่ง request ไปยัง API ด้วย method PUT
+        this.$axios
+          .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
+            ...this.editedUser,
+            user_pic: imageData, // ใช้ข้อมูลรูปภาพที่แปลงแล้ว
+          })
+          .then((response) => {
+            console.log("User updated successfully:", response.data);
 
-          // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
-          this.editDialog = false;
+            // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
+            this.editDialog = false;
 
-          // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
-          this.refreshUsersData();
-        })
-        .catch((error) => {
-          console.error("Error updating user:", error.response.data);
-        });
+            // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
+            this.refreshUsersData();
+          })
+          .catch((error) => {
+            console.error("Error updating user:", error.response.data);
+          });
+      } else {
+        // ถ้าไม่มีการเลือกรูปภาพใหม่ ให้แก้ไขข้อมูลปกติโดยไม่รวมภาพ
+        this.$axios
+          .put(`http://localhost:8080/api/users/${this.editedUser.user_id}`, {
+            ...this.editedUser,
+          })
+          .then((response) => {
+            console.log("User updated successfully:", response.data);
+
+            // หลังจากอัปเดตข้อมูลเสร็จ ให้ปิด dialog แก้ไขข้อมูล
+            this.editDialog = false;
+
+            // หลังจากปิด dialog แก้ไขข้อมูล ให้ทำการ refresh ข้อมูล users โดยเรียก API GET ใหม่
+            this.refreshUsersData();
+          })
+          .catch((error) => {
+            console.error("Error updating user:", error.response.data);
+          });
+      }
     },
+
     async getFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -242,6 +300,13 @@ export default {
   },
   data() {
     return {
+      positions: [
+        { id: 1, name: "Manager" },
+        { id: 2, name: "Developer" },
+        { id: 3, name: "Designer" },
+      ],
+      statuses: ["Active", "Inactive"],
+      roles: ["Admin", "User"],
       users: [],
       searchTerm: "",
       filteredUsers: [],
@@ -267,47 +332,3 @@ export default {
 <style scoped>
 /* Add any additional styles if needed */
 </style>
-"
-
-Code API : "router.put('/users/:user_id', async (req, res) => {
-  try {
-    const { user_firstname, user_position } = req.body;
-    const { user_id } = req.params;
-
-    // Create an object to store only the fields that need to be updated
-    const updatedUserFields = {};
-
-    // Check and add user_firstname if provided
-    if (user_firstname !== undefined) {
-      updatedUserFields.user_firstname = user_firstname;
-    }
-
-    // Check and add user_position if provided
-    if (user_position !== undefined) {
-      updatedUserFields.user_position = user_position;
-    }
-
-    // Check if there are fields to update
-    if (Object.keys(updatedUserFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update' });
-    }
-
-    const query = 'UPDATE Users SET ? WHERE user_id = ?';
-
-    await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [updatedUserFields, user_id],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
-    });
-
-    res.send('User updated successfully');
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});

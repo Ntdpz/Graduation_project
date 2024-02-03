@@ -24,8 +24,9 @@ const upload = multer({ storage: storage });
 // Middleware สำหรับการอัปโหลดไฟล์ภาพ
 const uploadSingle = upload.single('user_pic');
 
+// API Code
+
 router.put('/users/:user_id', async (req, res) => {
-  console.log(req.body);
   try {
     const {
       user_firstname,
@@ -83,6 +84,18 @@ router.put('/users/:user_id', async (req, res) => {
       updatedUserFields.user_role = user_role;
     }
 
+    // Check if user_pic is provided in the request
+    if (req.body.user_pic !== null) {
+      // Convert the image to base64
+      const userPicBase64 = req.body.user_pic;
+      updatedUserFields.user_pic = userPicBase64;
+    } else {
+      // ถ้า client ส่ง user_pic เป็น null ให้ทำการลบภาพออกจากฐานข้อมูล
+      updatedUserFields.user_pic = null;
+    }
+
+
+
     // Check if there are fields to update
     if (Object.keys(updatedUserFields).length === 0) {
       return res.status(400).json({ error: 'No fields to update' });
@@ -107,6 +120,8 @@ router.put('/users/:user_id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 
 // Route สำหรับสร้างผู้ใช้ใหม่
