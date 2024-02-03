@@ -20,9 +20,8 @@ export const routes = [
   { path: '/UserManage', component: UserManage },
   { path: '/User/editUser/:id', name: 'edit-user', component: EditUser },
   { path: '/', component: Dashboard },
-  { path: '/project', omponent: {render(c) {
-                return c('router-view');
-            },},children: [{ path: 'create-project', component: CreateProject },],},
+  { path: '/project/createProject', component: CreateProject },
+            
 ];
 
 const router = new VueRouter({
