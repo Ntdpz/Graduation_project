@@ -1,4 +1,3 @@
-// ไฟล์ userRoutes.js
 const express = require('express');
 const router = express.Router();
 const path = require('path');
@@ -6,10 +5,8 @@ const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'))
 const multer = require('multer');
 const fs = require('fs');
 
-// Middleware: เปิดใช้งาน JSON parsing
 router.use(express.json());
 
-// Middleware: เชื่อมต่อกับฐานข้อมูล
 router.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -19,14 +16,35 @@ router.use(async (req, res, next) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-// Middleware: ตั้งค่า multer สำหรับการอัปโหลดไฟล์
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const uploadSingle = upload.single('user_pic'); // Middleware สำหรับการอัปโหลดไฟล์ภาพ
+const uploadSingle = upload.single('user_pic');
 
-// API Code
 
+//login API
+router.post('/login', async (req, res) => {
+  try {
+    const { user_id, user_password } = req.body;
+
+    const query = 'SELECT * FROM Users WHERE user_id = ? AND user_password = ?';
+
+    const user = await new Promise((resolve, reject) => {
+      db.query(query, [user_id, user_password], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (user.length === 0) {
+      res.status(401).json({ error: 'Invalid user_id or password' });
+    } else {
+      res.json({ message: 'Login successful', user: user[0] });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 // Route: อัปเดตข้อมูลผู้ใช้
 router.put('/users/:user_id', async (req, res) => {
   try {
@@ -79,7 +97,6 @@ router.put('/users/:user_id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 // Route: สร้างผู้ใช้ใหม่
 router.post('/users', async (req, res) => {
   try {
@@ -140,8 +157,14 @@ async function getFileAsBase64(filePath) {
     });
   });
 };
-
-// Route: ลบผู้ใช้
+async function getFileAsBase64(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, { encoding: 'base64' }, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+}
 router.delete('/users/:user_id', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -161,8 +184,6 @@ router.delete('/users/:user_id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-// Route: ดึงข้อมูลผู้ใช้ทั้งหมด
 router.get('/users', async (req, res) => {
   try {
     await connectToDatabase();
@@ -181,8 +202,6 @@ router.get('/users', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-// Route: ดึงข้อมูลผู้ใช้ตาม ID
 router.get('/users/:user_id', async (req, res) => {
   try {
     await connectToDatabase();
@@ -207,5 +226,4 @@ router.get('/users/:user_id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 module.exports = router;
