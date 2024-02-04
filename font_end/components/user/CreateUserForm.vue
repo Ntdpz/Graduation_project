@@ -121,7 +121,7 @@
             await Swal.fire({
               icon: "warning",
               title: "Oops...",
-              text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+              text: "Please provide complete information for each field.",
             });
             return; // ออกจากเมธอดเพื่อไม่ทำต่อ
           }
