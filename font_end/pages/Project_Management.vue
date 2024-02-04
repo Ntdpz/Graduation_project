@@ -1,27 +1,46 @@
 <template>
-    <div class="dashboard">
-        <v-row no-gutters class="mt-4">
-            <v-col class="text-left" style="margin-right: 16px;">
-                <h1>{{ greeting }}, Bee</h1>
-                <p>{{ currentDateTime }}</p>
-            </v-col>
-            
-            <v-col class="text-left">
-                <v-btn icon @click="handleIconClick">
-                  <router-link to="/project/createProject">
-                    <v-icon>mdi-plus</v-icon>
-                  </router-link>
-                    
-                </v-btn>
-            </v-col>
-        
-            <v-col class="text-right" style="margin-right: 16px;"> 
-                <v-btn class="work-item" @click="handleButtonClick">
-                    <p>All Projects</p>
-                </v-btn>
-            </v-col>
-        </v-row>                                 
-    </div>  
+  <div class="dashboard">
+    <v-row no-gutters class="mt-4">
+      <v-col class="text-left" style="margin-right: 16px">
+        <h1>{{ greeting }}, Bee</h1>
+        <p>{{ currentDateTime }}</p>
+      </v-col>
+
+      <v-col class="text-left">
+        <v-btn icon @click="handleIconClick">
+          <router-link to="/project/createProject">
+            <v-icon>mdi-plus</v-icon>
+          </router-link>
+        </v-btn>
+      </v-col>
+
+      <v-col class="text-right" style="margin-right: 16px">
+        <v-btn class="work-item" @click="handleButtonClick">
+          <p>All Projects</p>
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-card
+        v-for="project in projects"
+        :key="project.project_id"
+        class="tracking-work-card mt-6 ml-10"
+        @click="handleTrackingWorkClick(project)"
+      >
+        <v-card-title>
+          <h2>{{ project.project_name_TH }}</h2>
+        </v-card-title>
+        <v-card-text>
+          <div class="work-item">
+            <p>{{ project.project_progress }}% Progress</p>
+            <p>Planned Start: {{ project.project_plan_start }}</p>
+            <p>Planned End: {{ project.project_plan_end }}</p>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -90,42 +109,5 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-    margin-bottom: 10px;
-}
-
-p {
-    margin: 0;
-}
-
-.tracking-work {
-    display: flex;
-    justify-content: space-between;
-}
-
-.work-item {
-    width: 45%;
-}
-
-.progress-bar {
-    background-color: #e0e0e0;
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.progress {
-    background-color: #4caf50;
-    height: 100%;
-}
-
-.dashboard {
-    /* Add any additional styles specific to the dashboard component */
-    /* For example, you can set a background color or define a max-width */
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* Add your styles here */
 </style>
