@@ -7,8 +7,8 @@
       </v-col>
 
       <v-col class="text-left">
-        <v-btn icon @click="handleIconClick">
-          <router-link to="/project/createProject">
+        <v-btn icon @click="handleIconClick" color="white">
+          <router-link to="/project/createProject" style="color: white;">
             <v-icon>mdi-plus</v-icon>
           </router-link>
         </v-btn>
