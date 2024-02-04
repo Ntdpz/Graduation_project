@@ -1,7 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');  // Import bodyParser module
+const mysql = require('mysql');
 
+<<<<<<< HEAD
 const taskRoutes = require('./routes/task_routes.js');
 const user_taskRoutes = require('./routes/user/user_taskRoutes.js');
 const userRoutes = require('./routes/userRoutes');
@@ -40,3 +39,30 @@ connectToDatabase().then(() => {
 }).catch(error => {
   console.error('Error connecting to the database:', error);
 });
+=======
+// กำหนดค่าการเชื่อมต่อ MySQL
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'graduation_project',
+});
+
+// เชื่อมต่อกับ MySQL
+connection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('Connected to MySQL');
+});
+
+// ทำ query ตามต้องการ
+connection.query('SELECT * FROM users', (error, results, fields) => {
+  if (error) throw error;
+  console.log('Query results:', results);
+});
+
+// ปิดการเชื่อมต่อ MySQL เมื่อทำงานเสร็จ
+connection.end();
+>>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
