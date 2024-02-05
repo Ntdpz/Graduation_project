@@ -15,24 +15,36 @@ router.use(async (req, res, next) => {
   }
 });
 
-router.post('/projects', async (req, res) => {
+// Create a new system
+router.post('/systems', async (req, res) => {
   try {
     const {
+      system_id,
+      system_nameTH,
+      system_nameEN,
+      system_shortname,
       project_id,
-      project_name_TH,
-      project_name_ENG,
-      project_progress,
-      project_plan_start,
-      project_plan_end,
+      system_progress,
+      system_plan_start,
+      system_plan_end,
     } = req.body;
 
     const query =
-      'INSERT INTO Projects (project_id, project_name_TH, project_name_ENG, project_progress, project_plan_start, project_plan_end) VALUES (?, ?, ?, ?, ?, ?)';
+      'INSERT INTO Systems (system_id, system_nameTH, system_nameEN, system_shortname, project_id, system_progress, system_plan_start, system_plan_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     await new Promise((resolve, reject) => {
       db.query(
         query,
-        [project_id, project_name_TH, project_name_ENG, project_progress, project_plan_start, project_plan_end],
+        [
+          system_id,
+          system_nameTH,
+          system_nameEN,
+          system_shortname,
+          project_id,
+          system_progress,
+          system_plan_start,
+          system_plan_end,
+        ],
         (err, result) => {
           if (err) reject(err);
           resolve(result);
@@ -40,17 +52,18 @@ router.post('/projects', async (req, res) => {
       );
     });
 
-    res.send('Project created successfully');
+    res.send('System created successfully');
   } catch (error) {
-    console.error('Error creating project:', error);
+    console.error('Error creating system:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Route สำหรับดึงข้อมูลโปรเจ็คทั้งหมด
-router.get('/projects', async (req, res) => {
+// Get all systems
+router.get('/systems', async (req, res) => {
   try {
-    const query = 'SELECT * FROM Projects';
+    await connectToDatabase();
+    const query = 'SELECT * FROM Systems';
 
     const results = await new Promise((resolve, reject) => {
       db.query(query, (err, results) => {
@@ -61,107 +74,117 @@ router.get('/projects', async (req, res) => {
 
     res.json(results);
   } catch (error) {
-    console.error('Error fetching projects:', error);
+    console.error('Error fetching systems:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Route สำหรับดึงข้อมูลโปรเจ็คด้วย ID
-router.get('/projects/:project_id', async (req, res) => {
+// Get a specific system by system_id
+router.get('/systems/:system_id', async (req, res) => {
   try {
-    const { project_id } = req.params;
-
-    const query = 'SELECT * FROM Projects WHERE project_id = ?';
+    const { system_id } = req.params;
+    await connectToDatabase();
+    const query = 'SELECT * FROM Systems WHERE system_id = ?';
 
     const results = await new Promise((resolve, reject) => {
-      db.query(query, [project_id], (err, results) => {
+      db.query(query, [system_id], (err, results) => {
         if (err) reject(err);
         resolve(results);
       });
     });
 
-    if (results.length === 0) {
-      res.status(404).json({ error: 'Project not found' });
-    } else {
-      res.json(results[0]);
-    }
+    res.json(results);
   } catch (error) {
-    console.error('Error fetching project by ID:', error);
+    console.error('Error fetching system:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-
-router.put('/projects/:project_id', async (req, res) => {
+// Update a specific system by system_id
+router.put('/systems/:system_id', async (req, res) => {
   try {
+    const { system_id } = req.params;
     const {
-      project_name_TH,
-      project_name_ENG,
-      project_progress,
-      project_plan_start,
-      project_plan_end,
+      system_nameTH,
+      system_nameEN,
+      system_shortname,
+      project_id,
+      system_progress,
+      system_plan_start,
+      system_plan_end,
     } = req.body;
 
-    const { project_id } = req.params;
+    const updatedSystemFields = {};
 
-    const updatedProjectFields = {};
-
-    if (project_name_TH !== undefined) {
-      updatedProjectFields.project_name_TH = project_name_TH;
+    if (system_nameTH !== undefined) {
+      updatedSystemFields.system_nameTH = system_nameTH;
     }
 
-    if (project_name_ENG !== undefined) {
-      updatedProjectFields.project_name_ENG = project_name_ENG;
+    if (system_nameEN !== undefined) {
+      updatedSystemFields.system_nameEN = system_nameEN;
     }
 
-    if (project_progress !== undefined) {
-      updatedProjectFields.project_progress = project_progress;
+    if (system_shortname !== undefined) {
+      updatedSystemFields.system_shortname = system_shortname;
     }
 
-    if (project_plan_start !== undefined) {
-      updatedProjectFields.project_plan_start = project_plan_start;
+    if (project_id !== undefined) {
+      updatedSystemFields.project_id = project_id;
     }
 
-    if (project_plan_end !== undefined) {
-      updatedProjectFields.project_plan_end = project_plan_end;
+    if (system_progress !== undefined) {
+      updatedSystemFields.system_progress = system_progress;
     }
 
-    if (Object.keys(updatedProjectFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update' });
+    if (system_plan_start !== undefined) {
+      updatedSystemFields.system_plan_start = system_plan_start;
     }
 
-    const query = 'UPDATE Projects SET ? WHERE project_id = ?';
+    if (system_plan_end !== undefined) {
+      updatedSystemFields.system_plan_end = system_plan_end;
+    }
+
+    if (Object.keys(updatedSystemFields).length === 0) {
+      return res.status(400).json({ error: 'No fields to update for system_id: ' + system_id });
+    }
+
+    const query = 'UPDATE Systems SET ? WHERE system_id = ?';
 
     await new Promise((resolve, reject) => {
-      db.query(query, [updatedProjectFields, project_id], (err, result) => {
-        if (err) reject(err);
-        resolve(result);
-      });
+      db.query(
+        query,
+        [updatedSystemFields, system_id],
+        (err, result) => {
+          if (err) reject(err);
+          resolve(result);
+        }
+      );
     });
 
-    res.send('Project updated successfully');
+    res.send('System updated successfully');
   } catch (error) {
-    console.error('Error updating project:', error);
+    console.error('Error updating system:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-router.delete('/projects/:project_id', async (req, res) => {
+// Delete a specific system by system_id
+router.delete('/systems/:system_id', async (req, res) => {
   try {
-    const { project_id } = req.params;
+    const { system_id } = req.params;
 
-    const query = 'DELETE FROM Projects WHERE project_id = ?';
+    const query = 'DELETE FROM Systems WHERE system_id = ?';
 
     await new Promise((resolve, reject) => {
-      db.query(query, [project_id], (err, result) => {
+      db.query(query, [system_id], (err, result) => {
         if (err) reject(err);
         resolve(result);
       });
     });
 
-    res.send('Project deleted successfully');
+    res.send('System deleted successfully');
   } catch (error) {
-    console.error('Error deleting project:', error);
+    console.error('Error deleting system:', error);
     res.status(500).send('Internal Server Error');
   }
 });
