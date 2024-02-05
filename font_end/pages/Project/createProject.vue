@@ -120,12 +120,18 @@ export default {
   margin-bottom: 5px;
 }
 
+/* Adjusted style for input fields */
 input {
   color: white;
   background-color: transparent;
   border: 1px solid white;
   padding: 8px;
   border-radius: 5px;
+}
+
+/* Style for calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 .buttons {
