@@ -1,159 +1,59 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
+const { db } = require('../modules/db');
 
-router.use(express.json());
-
-router.use(async (req, res, next) => {
+// Get all screens
+router.get('/screens', async (req, res) => {
   try {
-    await connectToDatabase();
-    next();
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-// Create a new system
-router.post('/systems', async (req, res) => {
-  try {
-    const {
-      system_id,
-      system_nameTH,
-      system_nameEN,
-      system_shortname,
-      project_id,
-      system_progress,
-      system_plan_start,
-      system_plan_end,
-    } = req.body;
-
-    const query =
-      'INSERT INTO Systems (system_id, system_nameTH, system_nameEN, system_shortname, project_id, system_progress, system_plan_start, system_plan_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-
-    await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [
-          system_id,
-          system_nameTH,
-          system_nameEN,
-          system_shortname,
-          project_id,
-          system_progress,
-          system_plan_start,
-          system_plan_end,
-        ],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
-    });
-
-    res.send('System created successfully');
-  } catch (error) {
-    console.error('Error creating system:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-// Get all systems
-router.get('/systems', async (req, res) => {
-  try {
-    await connectToDatabase();
-    const query = 'SELECT * FROM Systems';
-
-    const results = await new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM Screens';
+    const screens = await new Promise((resolve, reject) => {
       db.query(query, (err, results) => {
         if (err) reject(err);
         resolve(results);
       });
     });
-
-    res.json(results);
+    res.json(screens);
   } catch (error) {
-    console.error('Error fetching systems:', error);
+    console.error('Error fetching screens:', error);
     res.status(500).send('Internal Server Error');
   }
 });
-
-// Get a specific system by system_id
-router.get('/systems/:system_id', async (req, res) => {
+// Route สำหรับดึงข้อมูล Screen ด้วย ID
+router.get('/screens/:screen_id', async (req, res) => {
   try {
-    const { system_id } = req.params;
-    await connectToDatabase();
-    const query = 'SELECT * FROM Systems WHERE system_id = ?';
+    const { screen_id } = req.params;
 
-    const results = await new Promise((resolve, reject) => {
-      db.query(query, [system_id], (err, results) => {
+    const query = 'SELECT * FROM Screens WHERE screen_id = ?';
+
+    const screen = await new Promise((resolve, reject) => {
+      db.query(query, [screen_id], (err, results) => {
         if (err) reject(err);
         resolve(results);
       });
     });
 
-    res.json(results);
+    if (screen.length === 0) {
+      res.status(404).json({ error: 'Screen not found' });
+    } else {
+      res.json(screen[0]);
+    }
   } catch (error) {
-    console.error('Error fetching system:', error);
+    console.error('Error fetching screen by ID:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Update a specific system by system_id
-router.put('/systems/:system_id', async (req, res) => {
+// Create a new screen
+router.post('/screens', async (req, res) => {
   try {
-    const { system_id } = req.params;
-    const {
-      system_nameTH,
-      system_nameEN,
-      system_shortname,
-      project_id,
-      system_progress,
-      system_plan_start,
-      system_plan_end,
-    } = req.body;
+    const { screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic } = req.body;
 
-    const updatedSystemFields = {};
-
-    if (system_nameTH !== undefined) {
-      updatedSystemFields.system_nameTH = system_nameTH;
-    }
-
-    if (system_nameEN !== undefined) {
-      updatedSystemFields.system_nameEN = system_nameEN;
-    }
-
-    if (system_shortname !== undefined) {
-      updatedSystemFields.system_shortname = system_shortname;
-    }
-
-    if (project_id !== undefined) {
-      updatedSystemFields.project_id = project_id;
-    }
-
-    if (system_progress !== undefined) {
-      updatedSystemFields.system_progress = system_progress;
-    }
-
-    if (system_plan_start !== undefined) {
-      updatedSystemFields.system_plan_start = system_plan_start;
-    }
-
-    if (system_plan_end !== undefined) {
-      updatedSystemFields.system_plan_end = system_plan_end;
-    }
-
-    if (Object.keys(updatedSystemFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update for system_id: ' + system_id });
-    }
-
-    const query = 'UPDATE Systems SET ? WHERE system_id = ?';
+    const query = 'INSERT INTO Screens (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     await new Promise((resolve, reject) => {
       db.query(
         query,
-        [updatedSystemFields, system_id],
+        [screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic],
         (err, result) => {
           if (err) reject(err);
           resolve(result);
@@ -161,30 +61,76 @@ router.put('/systems/:system_id', async (req, res) => {
       );
     });
 
-    res.send('System updated successfully');
+    res.send('Screen created successfully');
   } catch (error) {
-    console.error('Error updating system:', error);
+    console.error('Error creating screen:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Delete a specific system by system_id
-router.delete('/systems/:system_id', async (req, res) => {
+// Update an existing screen
+router.put('/screens/:screen_id', async (req, res) => {
   try {
-    const { system_id } = req.params;
+    const { screen_id } = req.params;
+    const { screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic } = req.body;
 
-    const query = 'DELETE FROM Systems WHERE system_id = ?';
+    const updatedScreenFields = {};
+
+    if (screen_name !== undefined) updatedScreenFields.screen_name = screen_name;
+    if (screen_status !== undefined) updatedScreenFields.screen_status = screen_status;
+    if (screen_level !== undefined) updatedScreenFields.screen_level = screen_level;
+    if (screen_manday !== undefined) updatedScreenFields.screen_manday = screen_manday;
+    if (system_id !== undefined) updatedScreenFields.system_id = system_id;
+    if (project_id !== undefined) updatedScreenFields.project_id = project_id;
+    if (screen_progress !== undefined) updatedScreenFields.screen_progress = screen_progress;
+    if (screen_plan_start !== undefined) updatedScreenFields.screen_plan_start = screen_plan_start;
+    if (screen_plan_end !== undefined) updatedScreenFields.screen_plan_end = screen_plan_end;
+    if (screen_actual_start !== undefined) updatedScreenFields.screen_actual_start = screen_actual_start;
+    if (screen_actual_end !== undefined) updatedScreenFields.screen_actual_end = screen_actual_end;
+    if (screen_pic !== undefined) updatedScreenFields.screen_pic = screen_pic;
+
+    const query = 'UPDATE Screens SET ? WHERE screen_id = ?';
 
     await new Promise((resolve, reject) => {
-      db.query(query, [system_id], (err, result) => {
+      db.query(
+        query,
+        [updatedScreenFields, screen_id],
+        (err, result) => {
+          if (err) {
+            console.error('Error updating screen:', err);
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+
+
+    res.send('Screen updated successfully');
+  } catch (error) {
+    console.error('Error updating screen:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Delete an existing screen
+router.delete('/screens/:screen_id', async (req, res) => {
+  try {
+    const { screen_id } = req.params;
+
+    const query = 'DELETE FROM Screens WHERE screen_id = ?';
+
+    await new Promise((resolve, reject) => {
+      db.query(query, [screen_id], (err, result) => {
         if (err) reject(err);
         resolve(result);
       });
     });
 
-    res.send('System deleted successfully');
+    res.send('Screen deleted successfully');
   } catch (error) {
-    console.error('Error deleting system:', error);
+    console.error('Error deleting screen:', error);
     res.status(500).send('Internal Server Error');
   }
 });
