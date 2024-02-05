@@ -95,6 +95,9 @@ export default {
 
         if (result.isConfirmed) {
           await this.handleSubmit(); // Continue with form submission
+
+          // Use Vue Router to navigate back to Project_Management
+          this.$router.push({ name: 'Project_Management' });
         }
       } catch (error) {
         console.error('Error showing confirmation:', error);
@@ -106,6 +109,9 @@ export default {
         title: 'Project Creation Canceled',
         icon: 'info',
         confirmButtonColor: '#00ff51',
+      }).then(() => {
+        // Use Vue Router to navigate back to Project_Management
+        this.$router.push({ name: 'Project_Management' });
       });
     },
     resetForm() {
