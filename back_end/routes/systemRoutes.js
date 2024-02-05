@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
+const moment = require('moment');
 
 router.use(express.json());
 
@@ -63,7 +64,7 @@ router.post('/systems', async (req, res) => {
 router.get('/systems', async (req, res) => {
   try {
     await connectToDatabase();
-    const query = 'SELECT * FROM Systems';
+    const query = 'SELECT Systems.*, COUNT(Screens.screen_id) AS screen_count, AVG(Screens.screen_progress) AS system_progress, MIN(Screens.screen_plan_start) AS system_plan_start FROM Systems LEFT JOIN Screens ON Systems.system_id = Screens.system_id GROUP BY Systems.system_id';
 
     const results = await new Promise((resolve, reject) => {
       db.query(query, (err, results) => {
@@ -72,13 +73,18 @@ router.get('/systems', async (req, res) => {
       });
     });
 
+    // Calculate overall progress and earliest plan_start
+    results.forEach(system => {
+      system.system_progress = parseFloat(system.system_progress || 0).toFixed(2);
+      system.system_plan_start = moment(system.system_plan_start).format('YYYY-MM-DD');
+    });
+
     res.json(results);
   } catch (error) {
     console.error('Error fetching systems:', error);
     res.status(500).send('Internal Server Error');
   }
 });
-
 // Get a specific system by system_id
 router.get('/systems/:system_id', async (req, res) => {
   try {

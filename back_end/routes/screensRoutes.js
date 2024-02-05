@@ -1,23 +1,64 @@
 const express = require('express');
 const router = express.Router();
-const { db } = require('../modules/db');
+const { connectToDatabase, db } = require('../modules/db'); // Adjust the path accordingly
 
-// Get all screens
+const moment = require('moment');
+
+// Assuming you have a function to execute SQL queries, similar to db.query
+const executeQuery = (query, params) => {
+  return new Promise((resolve, reject) => {
+    db.query(query, params, (err, result) => {
+      if (err) reject(err);
+      resolve(result);
+    });
+  });
+};
+
 router.get('/screens', async (req, res) => {
   try {
-    const query = 'SELECT * FROM Screens';
-    const screens = await new Promise((resolve, reject) => {
-      db.query(query, (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
-    });
-    res.json(screens);
+    // Query to get all screens
+    const screensQuery = 'SELECT * FROM Screens';
+    const screens = await executeQuery(screensQuery);
+
+    // Fetch additional information for each screen
+    const screensWithTasks = await Promise.all(
+      screens.map(async (screen) => {
+        // Query to get all tasks associated with the current screen
+        const tasksQuery = 'SELECT * FROM Tasks WHERE screen_id = ?';
+        const tasks = await executeQuery(tasksQuery, [screen.screen_id]);
+
+        // Calculate screen_progress based on task_progress in each task
+        const totalTaskProgress = tasks.reduce((total, task) => total + task.task_progress, 0);
+        const screenProgress = tasks.length > 0 ? totalTaskProgress / tasks.length : null;
+
+        // Find the latest task and earliest task_plan_start
+        const latestTask = tasks.reduce((latest, task) => (!latest || task.task_plan_end > latest.task_plan_end ? task : latest), null);
+        const screenPlanStart = tasks.reduce((earliest, task) => (!earliest || task.task_plan_start < earliest ? task.task_plan_start : earliest), null);
+
+        // Build the modified screen object with additional information
+        const screenWithTasks = {
+          ...screen,
+          task_count: tasks.length,
+          screen_progress: screenProgress,
+          screen_plan_end: latestTask ? latestTask.task_plan_end : null,
+          screen_plan_start: screenPlanStart ? screenPlanStart : null,
+        };
+
+        return screenWithTasks;
+      })
+    );
+
+    // Respond with the modified screens data
+    res.json(screensWithTasks);
   } catch (error) {
     console.error('Error fetching screens:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+
 // Route สำหรับดึงข้อมูล Screen ด้วย ID
 router.get('/screens/:screen_id', async (req, res) => {
   try {
@@ -46,14 +87,41 @@ router.get('/screens/:screen_id', async (req, res) => {
 // Create a new screen
 router.post('/screens', async (req, res) => {
   try {
-    const { screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic } = req.body;
+    const {
+      screen_id,
+      screen_name,
+      screen_status,
+      screen_level,
+      screen_manday,
+      system_id,
+      screen_progress,
+      screen_plan_start,
+      screen_plan_end,
+      screen_actual_start,
+      screen_actual_end,
+      screen_pic
+    } = req.body;
 
-    const query = 'INSERT INTO Screens (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query =
+      'INSERT INTO Screens (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     await new Promise((resolve, reject) => {
       db.query(
         query,
-        [screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic],
+        [
+          screen_id,
+          screen_name,
+          screen_status,
+          screen_level,
+          screen_manday,
+          system_id,
+          screen_progress,
+          screen_plan_start,
+          screen_plan_end,
+          screen_actual_start,
+          screen_actual_end,
+          screen_pic
+        ],
         (err, result) => {
           if (err) reject(err);
           resolve(result);
@@ -67,6 +135,7 @@ router.post('/screens', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Update an existing screen
 router.put('/screens/:screen_id', async (req, res) => {
