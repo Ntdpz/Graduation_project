@@ -35,15 +35,18 @@
         </div>
 
         <div class="buttons">
-          <button type="submit" @click="handleSubmit" class="confirm-button">Confirm</button>
-          <button type="button" @click="cancel" class="cancel-button">Cancel</button>
+          <button type="submit" @click="handleConfirm" class="confirm-button">Confirm</button>
+          <button type="button" @click="handleCancel" class="cancel-button">Cancel</button>
         </div>
       </form>
     </div>
   </div>
 </template>
-  
+
 <script>
+// Import SweetAlert library
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
@@ -78,12 +81,34 @@ export default {
         // Handle errors or show a user-friendly message
       }
     },
-    cancel() {
-      console.log('Project creation canceled.');
-      // Implement cancellation logic if needed
+    async handleConfirm() {
+      try {
+        const result = await Swal.fire({
+          title: 'Confirm Project Creation',
+          text: 'Are you sure you want to create this project?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#00ff51',
+          cancelButtonColor: '#f44336',
+          confirmButtonText: 'Yes, create it!',
+        });
+
+        if (result.isConfirmed) {
+          await this.handleSubmit(); // Continue with form submission
+        }
+      } catch (error) {
+        console.error('Error showing confirmation:', error);
+        // Handle errors or show a user-friendly message
+      }
+    },
+    handleCancel() {
+      Swal.fire({
+        title: 'Project Creation Canceled',
+        icon: 'info',
+        confirmButtonColor: '#00ff51',
+      });
     },
     resetForm() {
-      // Implement this method to reset the form fields
       this.project_id = '';
       this.project_name_TH = '';
       this.project_name_ENG = '';
@@ -94,7 +119,7 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 .create-project-container {
   display: flex;
@@ -120,7 +145,6 @@ export default {
   margin-bottom: 5px;
 }
 
-/* Adjusted style for input fields */
 input {
   color: white;
   background-color: transparent;
@@ -129,7 +153,6 @@ input {
   border-radius: 5px;
 }
 
-/* Style for calendar icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
@@ -158,4 +181,3 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #f44336;
 }
 </style>
-
