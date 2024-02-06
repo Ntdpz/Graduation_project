@@ -97,13 +97,11 @@ router.post('/screens', async (req, res) => {
       screen_progress,
       screen_plan_start,
       screen_plan_end,
-      screen_actual_start,
-      screen_actual_end,
       screen_pic
     } = req.body;
 
     const query =
-      'INSERT INTO Screens (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO Screens (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, screen_progress, screen_plan_start, screen_plan_end, screen_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     await new Promise((resolve, reject) => {
       db.query(
@@ -118,8 +116,8 @@ router.post('/screens', async (req, res) => {
           screen_progress,
           screen_plan_start,
           screen_plan_end,
-          screen_actual_start,
-          screen_actual_end,
+          null, // screen_actual_start
+          null, // screen_actual_end
           screen_pic
         ],
         (err, result) => {
@@ -135,6 +133,7 @@ router.post('/screens', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // Update an existing screen
