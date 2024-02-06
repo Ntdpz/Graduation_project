@@ -51,3 +51,10 @@ export default {
   /* หรือค่าที่คุณต้องการ */
   margin-right: 40px;
 }</style>
+
+<style scoped>
+.button-spacing {
+  margin-top: 60px; /* หรือค่าที่คุณต้องการ */
+  margin-right: 40px;
+}
+</style>

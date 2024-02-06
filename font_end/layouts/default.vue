@@ -96,32 +96,41 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Add your styling here */
-
-body {
-  font-family: "Arial", sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-.custom-toolbar {
-  display: flex;
-  justify-content: space-between;
-}
-
-.custom-title {
-  text-decoration: none !important;
-  color: white !important;
-  border-bottom: none !important;
-}
-
-.custom-spacer {
-  width: 20px;
-}
-<<<<<<< HEAD
-</>
 =======
-</style>
->>>>>>> bbbe2d8123227eb7a32d07c2b8bde58ee6d43168
+  data() {
+    return {
+      clipped: false,
+      drawer: false,
+      fixed: false,
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'Admin page home',
+      items: [
+        {
+          icon: 'mdi-apps',
+          title: 'Welcome',
+          to: '/'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Admin page',
+          to: '/home_page_admin'
+        },
+        {
+          icon: 'mdi-account',
+          title: 'Main test',
+          to: '/navbar'
+        },
+         {
+          icon: 'mdi-account',
+          title: 'Main test2',
+          to: '/UserManage'
+        }
+>>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
+
+      ]
+    }
+  }
+}
+</script>
