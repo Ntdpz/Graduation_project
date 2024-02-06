@@ -61,7 +61,7 @@ router.post("/projects", async (req, res) => {
 router.get('/projects', async (req, res) => {
   try {
     await connectToDatabase();
-    const query = 'SELECT Projects.*, COUNT(DISTINCT Systems.system_id) AS system_count, COUNT(DISTINCT Screens.screen_id) AS screen_count, AVG(Screens.screen_progress) AS project_progress, MIN(Screens.screen_plan_start) AS project_plan_start FROM Projects LEFT JOIN Systems ON Projects.project_id = Systems.project_id LEFT JOIN Screens ON Systems.system_id = Screens.system_id GROUP BY Projects.project_id';
+    const query = 'SELECT Projects.*, COUNT(DISTINCT Systems.system_id) AS system_count, AVG(Screens.screen_progress) AS project_progress, MIN(Screens.screen_plan_start) AS project_plan_start, MAX(Screens.screen_plan_end) AS latest_system_plan_end FROM Projects LEFT JOIN Systems ON Projects.project_id = Systems.project_id LEFT JOIN Screens ON Systems.system_id = Screens.system_id GROUP BY Projects.project_id';
 
     const results = await new Promise((resolve, reject) => {
       db.query(query, (err, results) => {
@@ -74,6 +74,12 @@ router.get('/projects', async (req, res) => {
     results.forEach(project => {
       project.project_progress = parseFloat(project.project_progress || 0).toFixed(2);
       project.project_plan_start = moment(project.project_plan_start).format('YYYY-MM-DD');
+      // Check if latest_system_plan_end is not null, and replace project_plan_end with it
+      project.project_plan_end = project.latest_system_plan_end ? moment(project.latest_system_plan_end).format('YYYY-MM-DD') : "your_default_value_here";
+      // Remove the "system_count" property
+      delete project.system_count;
+      // Remove the "latest_system_plan_end" property
+      delete project.latest_system_plan_end;
     });
 
     res.json(results);
@@ -82,6 +88,9 @@ router.get('/projects', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
 
 
 // ดึงข้อมูลโปรเจ็คด้วย ID

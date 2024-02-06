@@ -44,6 +44,9 @@ router.get('/screens', async (req, res) => {
           screen_plan_start: screenPlanStart ? screenPlanStart : null,
         };
 
+        // Update or insert the modified screen data into the database
+        await updateOrInsertScreen(screenWithTasks);
+
         return screenWithTasks;
       })
     );
@@ -55,6 +58,62 @@ router.get('/screens', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+async function updateOrInsertScreen(screen) {
+  // Check if the screen already exists in the database
+  const existingScreenQuery = 'SELECT * FROM Screens WHERE screen_id = ?';
+  const existingScreen = await executeQuery(existingScreenQuery, [screen.screen_id]);
+
+  if (existingScreen.length > 0) {
+    // Update the existing screen in the database
+    const updateQuery = `
+      UPDATE Screens 
+      SET 
+        screen_name = ?, 
+        screen_status = ?, 
+        screen_level = ?, 
+        screen_manday = ?, 
+        system_id = ?, 
+        screen_progress = ?, 
+        screen_plan_start = ?, 
+        screen_plan_end = ?, 
+        screen_pic = ?
+      WHERE screen_id = ?
+    `;
+    await executeQuery(updateQuery, [
+      screen.screen_name,
+      screen.screen_status,
+      screen.screen_level,
+      screen.screen_manday,
+      screen.system_id,
+      screen.screen_progress,
+      screen.screen_plan_start,
+      screen.screen_plan_end,
+      screen.screen_pic,
+      screen.screen_id
+    ]);
+  } else {
+    // Insert the new screen into the database
+    const insertQuery = `
+      INSERT INTO Screens 
+        (screen_id, screen_name, screen_status, screen_level, screen_manday, system_id, screen_progress, screen_plan_start, screen_plan_end, screen_pic) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    await executeQuery(insertQuery, [
+      screen.screen_id,
+      screen.screen_name,
+      screen.screen_status,
+      screen.screen_level,
+      screen.screen_manday,
+      screen.system_id,
+      screen.screen_progress,
+      screen.screen_plan_start,
+      screen.screen_plan_end,
+      screen.screen_pic
+    ]);
+  }
+}
+
 
 
 
