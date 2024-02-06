@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <v-row>
     <v-col class="text-center" mt="4">
       <!-- Manage User Button with router-link -->
@@ -17,13 +16,17 @@
       </router-link>
     </v-col>
   </v-row>
-=======
-  
->>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
-}
+  name: "HomePageAdmin",
+};
 </script>
+
+<style scoped>
+.button-spacing {
+  margin-top: 60px; /* หรือค่าที่คุณต้องการ */
+  margin-right: 40px;
+}
+</style>

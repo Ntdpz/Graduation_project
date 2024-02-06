@@ -1,5 +1,6 @@
+<!-- layouts/default.vue -->
+
 <template>
-<<<<<<< HEAD
   <div>
     <v-app>
       <v-app-bar app class="custom-toolbar">
@@ -61,101 +62,11 @@
       </v-footer>
     </v-app>
   </div>
-=======
-  <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      app
-    >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-    </v-app-bar>
-    <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
-    </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
-  </v-app>
->>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
 </template>
 
 <script>
 import Swal from "sweetalert2";
 export default {
-<<<<<<< HEAD
   data: () => ({
     items: [{ title: "Dashboard" }, { title: "All projects" }],
   }),
@@ -191,41 +102,28 @@ export default {
   },
 };
 </script>
-=======
-  data() {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Admin page home',
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Admin page',
-          to: '/home_page_admin'
-        },
-        {
-          icon: 'mdi-account',
-          title: 'Main test',
-          to: '/navbar'
-        },
-         {
-          icon: 'mdi-account',
-          title: 'Main test2',
-          to: '/UserManage'
-        }
->>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
 
-      ]
-    }
-  }
+<style scoped>
+/* Add your styling here */
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
 }
-</script>
+
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-title {
+  text-decoration: none !important;
+  color: white !important;
+  border-bottom: none !important;
+}
+
+.custom-spacer {
+  width: 20px;
+}
+</style>
