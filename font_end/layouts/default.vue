@@ -1,3 +1,5 @@
+<!-- layouts/default.vue -->
+
 <template>
   <div>
     <v-app>
@@ -10,14 +12,10 @@
               </v-btn>
             </template>
             <v-list style="background-color: white;">
-              <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                @click="handleMenuItemClick(item.title)"
-              >
+              <v-list-item v-for="(item, i) in items" :key="i" @click="handleMenuItemClick(item.title)">
                 <v-list-item-title style="color: black;">{{ item.title }}</v-list-item-title>
               </v-list-item>
-            </v-list>            
+            </v-list>
           </v-menu>
         </nav>
 
@@ -115,7 +113,7 @@ body {
 
 .custom-title {
   text-decoration: none !important;
-  color: black !important;
+  color: white !important;
   border-bottom: none !important;
 }
 
