@@ -1,3 +1,5 @@
+<!-- layouts/default.vue -->
+
 <template>
   <div>
     <v-app>
@@ -115,7 +117,7 @@ body {
 
 .custom-title {
   text-decoration: none !important;
-  color: black !important;
+  color: white !important;
   border-bottom: none !important;
 }
 
