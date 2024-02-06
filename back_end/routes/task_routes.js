@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../modules/db');
+const moment = require('moment');
+
 
 // Middleware สำหรับการเชื่อมต่อกับฐานข้อมูล
 router.use(async (req, res, next) => {
@@ -81,7 +83,11 @@ router.get('/tasks', async (req, res) => {
     const results = await new Promise((resolve, reject) => {
       db.query(query, (err, results) => {
         if (err) reject(err);
-        resolve(results);
+        resolve(results.map(task => ({
+          ...task,
+          task_plan_start: moment(task.task_plan_start).format('YYYY-MM-DD'),
+          task_plan_end: moment(task.task_plan_end).format('YYYY-MM-DD')
+        })));
       });
     });
 
@@ -91,6 +97,7 @@ router.get('/tasks', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Route สำหรับอัปเดตข้อมูล Task
 router.put('/tasks/:task_id', async (req, res) => {

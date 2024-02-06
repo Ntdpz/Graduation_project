@@ -35,13 +35,17 @@ router.get('/screens', async (req, res) => {
         const latestTask = tasks.reduce((latest, task) => (!latest || task.task_plan_end > latest.task_plan_end ? task : latest), null);
         const screenPlanStart = tasks.reduce((earliest, task) => (!earliest || task.task_plan_start < earliest ? task.task_plan_start : earliest), null);
 
+        // Convert dates to the desired format (without time)
+        const formattedScreenPlanStart = moment(screenPlanStart).format('YYYY-MM-DD');
+        const formattedLatestTaskPlanEnd = latestTask ? moment(latestTask.task_plan_end).format('YYYY-MM-DD') : null;
+
         // Build the modified screen object with additional information
         const screenWithTasks = {
           ...screen,
           task_count: tasks.length,
           screen_progress: screenProgress,
-          screen_plan_end: latestTask ? latestTask.task_plan_end : null,
-          screen_plan_start: screenPlanStart ? screenPlanStart : null,
+          screen_plan_end: formattedLatestTaskPlanEnd,
+          screen_plan_start: formattedScreenPlanStart,
         };
 
         // Update or insert the modified screen data into the database
