@@ -14,53 +14,62 @@ router.use(async (req, res, next) => {
 });
 
 // Route สำหรับสร้าง Task
+// Route สำหรับสร้าง Task
+// Route สำหรับสร้าง Task
 router.post('/tasks', async (req, res) => {
-    try {
-        const {
-            task_id,
-            task_name,
-            task_status,
-            task_manday,
-            screen_id,
-            task_progress,
-            task_plan_start,
-            task_plan_end,
-            task_actual_start,
-            task_actual_end,
-        } = req.body;
+  try {
+    const {
+      task_id,
+      task_name,
+      task_status,
+      // Remove task_manday from here
+      screen_id,
+      task_progress,
+      task_plan_start,
+      task_plan_end,
+      task_actual_start,
+      task_actual_end,
+    } = req.body;
 
-        // Perform validation if needed
+    // Calculate task_manday based on task_plan_start and task_plan_end
+    const taskPlanStart = new Date(task_plan_start);
+    const taskPlanEnd = new Date(task_plan_end);
+    const timeDiff = Math.abs(taskPlanEnd.getTime() - taskPlanStart.getTime());
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-        const query =
-            'INSERT INTO Tasks (task_id, task_name, task_status, task_manday, screen_id, task_progress, task_plan_start, task_plan_end, task_actual_start, task_actual_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    // Perform validation if needed
 
-        await new Promise((resolve, reject) => {
-            db.query(
-                query,
-                [
-                    task_id,
-                    task_name,
-                    task_status,
-                    task_manday,
-                    screen_id,
-                    task_progress,
-                    task_plan_start,
-                    task_plan_end,
-                    task_actual_start,
-                    task_actual_end,
-                ],
-                (err, result) => {
-                    if (err) reject(err);
-                    resolve(result);
-                }
-            );
-        });
+    const query =
+      'INSERT INTO Tasks (task_id, task_name, task_status, task_manday, screen_id, task_progress, task_plan_start, task_plan_end, task_actual_start, task_actual_end) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-        res.send('Task created successfully');
-    } catch (error) {
-        console.error('Error creating task:', error);
-        res.status(500).send('Internal Server Error');
-    }
+    await new Promise((resolve, reject) => {
+      db.query(
+        query,
+        [
+          task_id,
+          task_name,
+          task_status,
+          // Assign calculated value to task_manday
+          daysDiff,
+          screen_id,
+          task_progress,
+          task_plan_start,
+          task_plan_end,
+          task_actual_start,
+          task_actual_end,
+        ],
+        (err, result) => {
+          if (err) reject(err);
+          resolve(result);
+        }
+      );
+    });
+
+    res.send('Task created successfully');
+  } catch (error) {
+    console.error('Error creating task:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 
