@@ -1,6 +1,5 @@
 const mysql = require('mysql');
 
-สร้าง pool connection ไปยังฐานข้อมูล MySQL
 const db = mysql.createPool({
   connectionLimit: 10, // จำนวน connection สูงสุดที่ pool สามารถจัดการได้
   host: 'mysql-seniorprojectprogresstracking.alwaysdata.net',     // ที่อยู่ IP หรือชื่อโฮสต์ของ MySQL Server
