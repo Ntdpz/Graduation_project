@@ -31,6 +31,9 @@ router.get('/screens', async (req, res) => {
         const totalTaskProgress = tasks.reduce((total, task) => total + task.task_progress, 0);
         const screenProgress = tasks.length > 0 ? totalTaskProgress / tasks.length : null;
 
+        // Calculate screen_manday based on the number of tasks
+        const screenManday = tasks.reduce((total, task) => total + task.task_manday, 0);
+
         // Find the latest task and earliest task_plan_start
         const latestTask = tasks.reduce((latest, task) => (!latest || task.task_plan_end > latest.task_plan_end ? task : latest), null);
         const screenPlanStart = tasks.reduce((earliest, task) => (!earliest || task.task_plan_start < earliest ? task.task_plan_start : earliest), null);
@@ -46,6 +49,7 @@ router.get('/screens', async (req, res) => {
           screen_progress: screenProgress,
           screen_plan_end: formattedLatestTaskPlanEnd,
           screen_plan_start: formattedScreenPlanStart,
+          screen_manday: screenManday,
         };
 
         // Update or insert the modified screen data into the database
@@ -62,6 +66,7 @@ router.get('/screens', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 async function updateOrInsertScreen(screen) {
   // Check if the screen already exists in the database
