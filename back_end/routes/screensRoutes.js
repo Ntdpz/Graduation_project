@@ -150,7 +150,6 @@ router.get('/screens/:screen_id', async (req, res) => {
   }
 });
 
-
 // Create a new screen
 router.post('/screens', async (req, res) => {
   try {
@@ -201,8 +200,6 @@ router.post('/screens', async (req, res) => {
   }
 });
 
-
-
 // Update an existing screen
 router.put('/screens/:screen_id', async (req, res) => {
   try {
@@ -249,8 +246,6 @@ router.put('/screens/:screen_id', async (req, res) => {
   }
 });
 
-
-
 // Delete an existing screen
 router.delete('/screens/:screen_id', async (req, res) => {
   try {
@@ -260,15 +255,22 @@ router.delete('/screens/:screen_id', async (req, res) => {
 
     await new Promise((resolve, reject) => {
       db.query(query, [screen_id], (err, result) => {
-        if (err) reject(err);
-        resolve(result);
+        if (err) {
+          console.error('Error deleting screen:', err);
+          reject('Error deleting screen: Database error');
+        } else {
+          if (result.affectedRows === 0) {
+            res.status(404).send('Error deleting screen: Screen not found');
+          } else {
+            res.send('Screen deleted successfully');
+          }
+          resolve(result);
+        }
       });
     });
-
-    res.send('Screen deleted successfully');
   } catch (error) {
     console.error('Error deleting screen:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Error deleting screen:  Please try again later.');
   }
 });
 
