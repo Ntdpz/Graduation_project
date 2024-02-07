@@ -84,7 +84,7 @@ router.get('/systems', async (req, res) => {
 
     // Calculate overall progress and format dates
     results.forEach(system => {
-      system.system_progress = parseFloat(system.system_progress || 0).toFixed(2);
+      system.system_progress = parseInt(system.system_progress || 0);
       system.system_plan_start = moment(system.system_plan_start).isValid() ? moment(system.system_plan_start).format('YYYY-MM-DD') : null;
       system.system_plan_end = moment(system.system_plan_end).isValid() ? moment(system.system_plan_end).format('YYYY-MM-DD') : null;
     });
@@ -102,7 +102,17 @@ router.get('/systems/:system_id', async (req, res) => {
   try {
     const { system_id } = req.params;
     await connectToDatabase();
-    const query = 'SELECT * FROM Systems WHERE system_id = ?';
+    const query = `
+      SELECT Systems.*, 
+             COUNT(Screens.screen_id) AS screen_count, 
+             AVG(Screens.screen_progress) AS system_progress, 
+             MIN(Screens.screen_plan_start) AS system_plan_start, 
+             MAX(Screens.screen_plan_end) AS system_plan_end 
+      FROM Systems 
+      LEFT JOIN Screens ON Systems.system_id = Screens.system_id 
+      WHERE Systems.system_id = ?
+      GROUP BY Systems.system_id
+    `;
 
     const results = await new Promise((resolve, reject) => {
       db.query(query, [system_id], (err, results) => {
@@ -111,26 +121,27 @@ router.get('/systems/:system_id', async (req, res) => {
       });
     });
 
-    res.json(results);
+    // Calculate overall progress and format dates
+    if (results.length > 0) {
+      const system = results[0];
+      system.system_progress = parseInt(system.system_progress || 0);
+      system.system_plan_start = moment(system.system_plan_start).isValid() ? moment(system.system_plan_start).format('YYYY-MM-DD') : null;
+      system.system_plan_end = moment(system.system_plan_end).isValid() ? moment(system.system_plan_end).format('YYYY-MM-DD') : null;
+    }
+
+    res.json(results.length > 0 ? results[0] : { error: 'System not found' });
   } catch (error) {
     console.error('Error fetching system:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
+
 // Update a specific system by system_id
 router.put('/systems/:system_id', async (req, res) => {
   try {
+    const { system_nameTH, system_nameEN, system_shortname, project_id } = req.body;
     const { system_id } = req.params;
-    const {
-      system_nameTH,
-      system_nameEN,
-      system_shortname,
-      project_id,
-      system_progress,
-      system_plan_start,
-      system_plan_end,
-    } = req.body;
 
     const updatedSystemFields = {};
 
@@ -150,39 +161,23 @@ router.put('/systems/:system_id', async (req, res) => {
       updatedSystemFields.project_id = project_id;
     }
 
-    if (system_progress !== undefined) {
-      updatedSystemFields.system_progress = system_progress;
-    }
-
-    if (system_plan_start !== undefined) {
-      updatedSystemFields.system_plan_start = system_plan_start;
-    }
-
-    if (system_plan_end !== undefined) {
-      updatedSystemFields.system_plan_end = system_plan_end;
-    }
-
     if (Object.keys(updatedSystemFields).length === 0) {
-      return res.status(400).json({ error: 'No fields to update for system_id: ' + system_id });
+      return res.status(400).json({ error: "No fields to update" });
     }
 
-    const query = 'UPDATE Systems SET ? WHERE system_id = ?';
+    const query = "UPDATE Systems SET ? WHERE system_id = ?";
 
     await new Promise((resolve, reject) => {
-      db.query(
-        query,
-        [updatedSystemFields, system_id],
-        (err, result) => {
-          if (err) reject(err);
-          resolve(result);
-        }
-      );
+      db.query(query, [updatedSystemFields, system_id], (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
     });
 
-    res.send('System updated successfully');
+    res.send("System updated successfully");
   } catch (error) {
-    console.error('Error updating system:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating system:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -195,7 +190,10 @@ router.delete('/systems/:system_id', async (req, res) => {
 
     await new Promise((resolve, reject) => {
       db.query(query, [system_id], (err, result) => {
-        if (err) reject(err);
+        if (err) {
+          console.error('Error deleting system:', err);
+          return reject(err);
+        }
         resolve(result);
       });
     });
@@ -203,8 +201,10 @@ router.delete('/systems/:system_id', async (req, res) => {
     res.send('System deleted successfully');
   } catch (error) {
     console.error('Error deleting system:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('An error occurred while deleting the system. Please try again later.');
   }
 });
+
+
 
 module.exports = router;
