@@ -73,9 +73,10 @@ router.get('/projects', async (req, res) => {
     // Calculate overall progress and earliest plan_start
     results.forEach(project => {
       project.project_progress = parseFloat(project.project_progress || 0).toFixed(2);
-      project.project_plan_start = moment(project.project_plan_start).format('YYYY-MM-DD');
+      // Check if project_plan_start is null and replace it with "Not determined"
+      project.project_plan_start = !project.project_plan_start ? "Not determined" : moment(project.project_plan_start).format('YYYY-MM-DD');
       // Check if latest_system_plan_end is not null, and replace project_plan_end with it
-      project.project_plan_end = project.latest_system_plan_end ? moment(project.latest_system_plan_end).format('YYYY-MM-DD') : "your_default_value_here";
+      project.project_plan_end = project.latest_system_plan_end ? moment(project.latest_system_plan_end).format('YYYY-MM-DD') : "Not determined";
       // Remove the "system_count" property
       delete project.system_count;
       // Remove the "latest_system_plan_end" property
@@ -88,6 +89,8 @@ router.get('/projects', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 
 
