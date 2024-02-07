@@ -91,16 +91,27 @@ router.get('/projects', async (req, res) => {
 });
 
 
-
-
-
-
-
 // ดึงข้อมูลโปรเจ็คด้วย ID
 router.get('/projects/:project_id', async (req, res) => {
   try {
     await connectToDatabase();
     const { project_id } = req.params;
+
+    // Get project details
+    const projectQuery = 'SELECT * FROM Projects WHERE project_id = ?';
+    const projectResult = await new Promise((resolve, reject) => {
+      db.query(projectQuery, [project_id], (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+
+    // Check if project exists
+    if (projectResult.length === 0) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    const { project_name_TH, project_name_ENG } = projectResult[0];
 
     // Get system count
     const systemCountQuery = 'SELECT COUNT(DISTINCT Systems.system_id) AS system_count FROM Systems WHERE Systems.project_id = ?';
@@ -146,12 +157,18 @@ router.get('/projects/:project_id', async (req, res) => {
 
     const { project_plan_start, project_plan_end } = projectPlanResult[0];
 
-    res.json({ system_count, screen_count, task_count, project_plan_start, project_plan_end });
+    // Format dates to 'YYYY-MM-DD'
+    const formatted_project_plan_start = moment(project_plan_start).format('YYYY-MM-DD');
+    const formatted_project_plan_end = moment(project_plan_end).format('YYYY-MM-DD');
+
+    res.json({ project_id, project_name_TH, project_name_ENG, system_count, screen_count, task_count, project_plan_start: formatted_project_plan_start, project_plan_end: formatted_project_plan_end });
   } catch (error) {
     console.error('Error fetching project details:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 // อัปเดตโปรเจ็คด้วย ID
 router.put("/projects/:project_id", async (req, res) => {
