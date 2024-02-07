@@ -227,16 +227,20 @@ router.delete("/projects/:project_id", async (req, res) => {
 
     await new Promise((resolve, reject) => {
       db.query(query, [project_id], (err, result) => {
-        if (err) reject(err);
+        if (err) {
+          console.error("Error deleting project:", err); // เพิ่มข้อมูลเพื่ออธิบายข้อผิดพลาด
+          reject(err);
+        }
         resolve(result);
       });
     });
 
     res.send("Project deleted successfully");
   } catch (error) {
-    console.error("Error deleting project:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error deleting project:", error); // แสดงข้อผิดพลาดที่เกิดขึ้น
+    res.status(500).send("An error occurred while deleting the project. Please try again later."); // แสดงข้อความข้อผิดพลาดที่เข้าใจง่าย
   }
 });
+
 
 module.exports = router;
