@@ -1,61 +1,57 @@
-<!-- layouts/default.vue -->
-
 <template>
   <div>
     <v-app>
-      <v-app-bar app class="custom-toolbar">
+      <v-app-bar app class="custom-toolbar" style="background-color: #ffffff;">
         <nav>
           <v-menu>
             <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on">
+              <v-btn icon v-on="on" style="color: black;">
                 <v-icon>mdi-menu</v-icon>
               </v-btn>
             </template>
-
-            <v-list>
+            <v-list style="background-color: white;">
               <v-list-item
                 v-for="(item, i) in items"
                 :key="i"
                 @click="handleMenuItemClick(item.title)"
               >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item-title style="color: black;">{{ item.title }}</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list>            
           </v-menu>
         </nav>
 
-        <v-btn icon @click="goBack">
+        <v-btn icon @click="goBack" style="color: #000000;">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
 
-        <v-btn icon @click="goForward">
+        <v-btn icon @click="goForward" style="color: #000000;">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
 
         <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
-        <router-link to="/">
-          <v-toolbar-title class="custom-title"
-            >Progress Tracking</v-toolbar-title
-          >
+        <router-link to="/" style="text-decoration: none; color: #000000;">
+          <v-toolbar-title class="custom-title">Progress Tracking</v-toolbar-title>
         </router-link>
 
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
-        <v-btn icon @click="confirmLogout">
+        <v-btn icon @click="confirmLogout" style="color: #000000;">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>
 
-      <v-main style="min-height: calc(100vh - 64px)">
+      <v-main style="min-height: calc(100vh - 64px); background-color: #ffffff;">
         <!-- 64px คือความสูงของ app bar -->
         <nuxt />
       </v-main>
 
-      <v-footer app>
+
+      <v-footer app style="background-color: #ffffff;">
         <v-col>
           <v-row justify="center">
             <v-col>
-              <p>&copy; Senior Project รักน้า 💖</p>
+              <p style="color: black;">&copy; Senior Project รักน้า 💖</p>
             </v-col>
           </v-row>
         </v-col>
@@ -119,7 +115,7 @@ body {
 
 .custom-title {
   text-decoration: none !important;
-  color: white !important;
+  color: black !important;
   border-bottom: none !important;
 }
 

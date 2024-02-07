@@ -1,24 +1,24 @@
-<template>
-  <div class="dashboard">
+<template><div class="dashboard" style="background-color: #ffffff; padding: 10px 70px; border-radius: 0; margin-right: 30px;">
     <v-row no-gutters class="mt-4">
       <v-col class="text-left" style="margin-right: 16px">
-        <h1>{{ greeting }}, Bee</h1>
-        <p>{{ currentDateTime }}</p>
+        <h1 class="text-01">{{ greeting }}, Bee</h1>
+        <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
       <v-col class="text-left">
         <v-btn icon @click="handleIconClick" color="white">
-          <router-link to="/project/createProject" style="color: white">
+          <router-link to="/project/createProject" style="color: #000000">
             <v-icon>mdi-plus</v-icon>
           </router-link>
         </v-btn>
       </v-col>
 
       <v-col class="text-right" style="margin-right: 16px">
-        <v-btn class="work-item" @click="handleButtonClick" style="padding: 5">
-          <p style="margin: 0">All Projects</p>
+        <v-btn class="work-item" color="#9747FF" @click="handleButtonClick" style="padding: 5">
+          <p style="margin: 0; color: white">All Projects</p>
         </v-btn>
-      </v-col>
+      </v-col>      
+      
     </v-row>
 
     <v-row>
@@ -40,17 +40,8 @@
 
           <v-card-actions>
             <!-- Edit button -->
-<v-btn class="mx-1" color="primary" @click="editProject(project)">
-  Edit
-</v-btn>
-            <!-- Delete button -->
-            <v-btn
-  class="mx-4"
-  color="primary"
-  @click="deleteProject(project)"
->
-  Delete
-</v-btn>
+            <v-btn class="mx-1 project-button" @click="editProject(project)" >Edit </v-btn>
+            <v-btn class="mx-4 project-button" @click="deleteProject(project)">Delete</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -86,7 +77,42 @@ export default {
     return {
       greeting: "",
       currentDateTime: "",
-      projects: [], // Assuming you have projects data
+      projects: [ {
+          project_id: 1,
+          project_name_TH: "Project A",
+          project_name_ENG: "Project A",
+          project_progress: 60,
+          project_plan_start: "2024-01-01",
+          project_plan_end: "2024-03-31",
+          project_code: "PA",
+          project_manager: "John Doe",
+          formatted_project_code: "PROJ-001",
+          formatted_project_manager: "JOHN DOE",
+        },
+        {
+          project_id: 2,
+          project_name_TH: "Project B",
+          project_name_ENG: "Project B",
+          project_progress: 80,
+          project_plan_start: "2024-02-15",
+          project_plan_end: "2024-04-30",
+          project_code: "PB",
+          project_manager: "Jane Smith",
+          formatted_project_code: "PROJ-002",
+          formatted_project_manager: "JANE SMITH",
+        },
+        {
+          project_id: 3,
+          project_name_TH: "Project C",
+          project_name_ENG: "Project C",
+          project_progress: 40,
+          project_plan_start: "2024-03-01",
+          project_plan_end: "2024-05-15",
+          project_code: "PC",
+          project_manager: "Bob Johnson",
+          formatted_project_code: "PROJ-003",
+          formatted_project_manager: "BOB JOHNSON",
+        },], // Assuming you have projects data
       editDialog: false,
       editedProject: {}, // Store edited project data here
     };
@@ -258,5 +284,60 @@ async deleteProject(project) {
 </script>
 
 <style scoped>
-/* Add your styles here */
+.text-01 {
+  color: black !important;
+}
+
+.project-manager {
+  color: #3f51b5;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.project-code {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #6c757d;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+
+.tracking-work-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(255, 253, 253, 0.1);
+  transition: transform 0.3s ease-in-out;
+  background-color: #9747FF;
+}
+
+.tracking-work-card:hover {
+  transform: translateY(-5px);
+}
+
+.tracking-work-card h2 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.work-item p {
+  margin-bottom: 5px;
+}
+
+.work-item p:last-child {
+  margin-bottom: 0;
+}
+
+.v-card-actions {
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.project-button {
+  color: #9747FF !important;
+  background-color: #ffffff !important;
+  font-weight: bold;
+}
 </style>
