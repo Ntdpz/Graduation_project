@@ -35,15 +35,18 @@
         </div>
 
         <div class="buttons">
-          <button type="submit" @click="handleSubmit" class="confirm-button">Confirm</button>
-          <button type="button" @click="cancel" class="cancel-button">Cancel</button>
+          <button type="submit" @click="handleConfirm" class="confirm-button">Confirm</button>
+          <button type="button" @click="handleCancel" class="cancel-button">Cancel</button>
         </div>
       </form>
     </div>
   </div>
 </template>
-  
+
 <script>
+// Import SweetAlert library
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
@@ -78,12 +81,40 @@ export default {
         // Handle errors or show a user-friendly message
       }
     },
-    cancel() {
-      console.log('Project creation canceled.');
-      // Implement cancellation logic if needed
+    async handleConfirm() {
+      try {
+        const result = await Swal.fire({
+          title: 'Confirm Project Creation',
+          text: 'Are you sure you want to create this project?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#00ff51',
+          cancelButtonColor: '#f44336',
+          confirmButtonText: 'Yes, create it!',
+        });
+
+        if (result.isConfirmed) {
+          await this.handleSubmit(); // Continue with form submission
+
+          // Use Vue Router to navigate back to Project_Management
+          this.$router.push({ name: 'Project_Management' });
+        }
+      } catch (error) {
+        console.error('Error showing confirmation:', error);
+        // Handle errors or show a user-friendly message
+      }
+    },
+    handleCancel() {
+      Swal.fire({
+        title: 'Project Creation Canceled',
+        icon: 'info',
+        confirmButtonColor: '#00ff51',
+      }).then(() => {
+        // Use Vue Router to navigate back to Project_Management
+        this.$router.push({ name: 'Project_Management' });
+      });
     },
     resetForm() {
-      // Implement this method to reset the form fields
       this.project_id = '';
       this.project_name_TH = '';
       this.project_name_ENG = '';
@@ -94,7 +125,7 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 .create-project-container {
   display: flex;
@@ -126,6 +157,10 @@ input {
   border: 1px solid white;
   padding: 8px;
   border-radius: 5px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 .buttons {
