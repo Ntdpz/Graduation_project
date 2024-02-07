@@ -181,10 +181,6 @@ router.put('/systems/:system_id', async (req, res) => {
   }
 });
 
-
-
-
-
 // Delete a specific system by system_id
 router.delete('/systems/:system_id', async (req, res) => {
   try {
@@ -194,7 +190,10 @@ router.delete('/systems/:system_id', async (req, res) => {
 
     await new Promise((resolve, reject) => {
       db.query(query, [system_id], (err, result) => {
-        if (err) reject(err);
+        if (err) {
+          console.error('Error deleting system:', err);
+          return reject(err);
+        }
         resolve(result);
       });
     });
@@ -202,8 +201,10 @@ router.delete('/systems/:system_id', async (req, res) => {
     res.send('System deleted successfully');
   } catch (error) {
     console.error('Error deleting system:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('An error occurred while deleting the system. Please try again later.');
   }
 });
+
+
 
 module.exports = router;
