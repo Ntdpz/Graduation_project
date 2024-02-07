@@ -173,40 +173,32 @@ router.get('/projects/:project_id', async (req, res) => {
 // อัปเดตโปรเจ็คด้วย ID
 router.put("/projects/:project_id", async (req, res) => {
   try {
-    const {
-      project_name_TH,
-      project_name_ENG,
-      project_progress,
-      project_plan_start,
-      project_plan_end,
-    } = req.body;
-
     const { project_id } = req.params;
+    const { project_name_TH, project_name_ENG } = req.body;
 
     const updatedProjectFields = {};
 
     if (project_name_TH !== undefined) {
       updatedProjectFields.project_name_TH = project_name_TH;
+    } else {
+      delete updatedProjectFields.project_name_TH;
     }
 
     if (project_name_ENG !== undefined) {
       updatedProjectFields.project_name_ENG = project_name_ENG;
-    }
-
-    if (project_progress !== undefined) {
-      updatedProjectFields.project_progress = project_progress;
-    }
-
-    if (project_plan_start !== undefined) {
-      updatedProjectFields.project_plan_start = project_plan_start;
-    }
-
-    if (project_plan_end !== undefined) {
-      updatedProjectFields.project_plan_end = project_plan_end;
+    } else {
+      delete updatedProjectFields.project_name_ENG;
     }
 
     if (Object.keys(updatedProjectFields).length === 0) {
       return res.status(400).json({ error: "No fields to update" });
+    }
+
+    // Ensure no other fields are being updated
+    const validFields = ['project_name_TH', 'project_name_ENG'];
+    const invalidFields = Object.keys(req.body).filter(field => !validFields.includes(field));
+    if (invalidFields.length > 0) {
+      return res.status(400).json({ error: `Fields ${invalidFields.join(', ')} cannot be changed` });
     }
 
     const query = "UPDATE Projects SET ? WHERE project_id = ?";
@@ -224,6 +216,7 @@ router.put("/projects/:project_id", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // ลบโปรเจ็คด้วย ID
 router.delete("/projects/:project_id", async (req, res) => {
