@@ -1,5 +1,4 @@
-<template>
-  <div class="dashboard">
+<template><div class="dashboard" style="background-color: #ffffff; padding: 10px 70px; border-radius: 0; margin-right: 30px;">
     <v-row no-gutters class="mt-4">
       <v-col class="text-left" style="margin-right: 16px">
         <h1 class="text-01">{{ greeting }}, Bee</h1>
@@ -304,11 +303,7 @@ async deleteProject(project) {
   vertical-align: middle;
   margin-right: 10px;
 }
-.dashboard {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-}
+
 
 .tracking-work-card {
   border-radius: 10px;
