@@ -15,10 +15,11 @@
       </v-col>
 
       <v-col class="text-right" style="margin-right: 16px">
-        <v-btn class="work-item" @click="handleButtonClick" style="padding: 5">
-          <p style="margin: 0">All Projects</p>
+        <v-btn class="work-item" color="#9747FF" @click="handleButtonClick" style="padding: 5">
+          <p style="margin: 0; color: white">All Projects</p>
         </v-btn>
-      </v-col>
+      </v-col>      
+      
     </v-row>
 
     <v-row>
@@ -340,7 +341,7 @@ async deleteProject(project) {
 }
 
 .project-button {
-  color: #000000 !important;
+  color: #9747FF !important;
   background-color: #ffffff !important;
   font-weight: bold;
 }
