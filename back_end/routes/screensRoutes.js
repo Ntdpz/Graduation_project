@@ -118,34 +118,33 @@ async function updateOrInsertScreen(screen) {
   }
 }
 
-
-
-
-
 // Route สำหรับดึงข้อมูล Screen ด้วย ID
 router.get('/screens/:screen_id', async (req, res) => {
   try {
     const { screen_id } = req.params;
 
-    const query = 'SELECT * FROM Screens WHERE screen_id = ?';
+    // Query to fetch screen details
+    const screenQuery = 'SELECT Screens.*, COUNT(Tasks.task_id) AS task_count FROM Screens LEFT JOIN Tasks ON Screens.screen_id = Tasks.screen_id WHERE Screens.screen_id = ?';
+    const screenResults = await executeQuery(screenQuery, [screen_id]);
 
-    const screen = await new Promise((resolve, reject) => {
-      db.query(query, [screen_id], (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
-    });
-
-    if (screen.length === 0) {
-      res.status(404).json({ error: 'Screen not found' });
-    } else {
-      res.json(screen[0]);
+    // Check if screen exists
+    if (screenResults.length === 0) {
+      return res.status(404).json({ error: 'Screen not found' });
     }
+
+    const screen = screenResults[0];
+
+    // Format screen plan dates
+    screen.screen_plan_start = moment(screen.screen_plan_start).format('YYYY-MM-DD');
+    screen.screen_plan_end = moment(screen.screen_plan_end).format('YYYY-MM-DD');
+
+    res.json(screen);
   } catch (error) {
     console.error('Error fetching screen by ID:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('An error occurred while fetching the screen details. Please try again later.');
   }
 });
+
 
 // Create a new screen
 router.post('/screens', async (req, res) => {
