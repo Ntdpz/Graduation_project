@@ -31,6 +31,9 @@ router.get('/screens', async (req, res) => {
         const totalTaskProgress = tasks.reduce((total, task) => total + task.task_progress, 0);
         const screenProgress = tasks.length > 0 ? totalTaskProgress / tasks.length : null;
 
+        // Calculate screen_manday based on the number of tasks
+        const screenManday = tasks.reduce((total, task) => total + task.task_manday, 0);
+
         // Find the latest task and earliest task_plan_start
         const latestTask = tasks.reduce((latest, task) => (!latest || task.task_plan_end > latest.task_plan_end ? task : latest), null);
         const screenPlanStart = tasks.reduce((earliest, task) => (!earliest || task.task_plan_start < earliest ? task.task_plan_start : earliest), null);
@@ -46,6 +49,7 @@ router.get('/screens', async (req, res) => {
           screen_progress: screenProgress,
           screen_plan_end: formattedLatestTaskPlanEnd,
           screen_plan_start: formattedScreenPlanStart,
+          screen_manday: screenManday,
         };
 
         // Update or insert the modified screen data into the database
@@ -62,6 +66,7 @@ router.get('/screens', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 async function updateOrInsertScreen(screen) {
   // Check if the screen already exists in the database
@@ -118,32 +123,30 @@ async function updateOrInsertScreen(screen) {
   }
 }
 
-
-
-
-
 // Route สำหรับดึงข้อมูล Screen ด้วย ID
 router.get('/screens/:screen_id', async (req, res) => {
   try {
     const { screen_id } = req.params;
 
-    const query = 'SELECT * FROM Screens WHERE screen_id = ?';
+    // Query to fetch screen details
+    const screenQuery = 'SELECT Screens.*, COUNT(Tasks.task_id) AS task_count FROM Screens LEFT JOIN Tasks ON Screens.screen_id = Tasks.screen_id WHERE Screens.screen_id = ?';
+    const screenResults = await executeQuery(screenQuery, [screen_id]);
 
-    const screen = await new Promise((resolve, reject) => {
-      db.query(query, [screen_id], (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
-    });
-
-    if (screen.length === 0) {
-      res.status(404).json({ error: 'Screen not found' });
-    } else {
-      res.json(screen[0]);
+    // Check if screen exists
+    if (screenResults.length === 0) {
+      return res.status(404).json({ error: 'Screen not found' });
     }
+
+    const screen = screenResults[0];
+
+    // Format screen plan dates
+    screen.screen_plan_start = moment(screen.screen_plan_start).format('YYYY-MM-DD');
+    screen.screen_plan_end = moment(screen.screen_plan_end).format('YYYY-MM-DD');
+
+    res.json(screen);
   } catch (error) {
     console.error('Error fetching screen by ID:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('An error occurred while fetching the screen details. Please try again later.');
   }
 });
 
@@ -197,27 +200,26 @@ router.post('/screens', async (req, res) => {
   }
 });
 
-
-
 // Update an existing screen
 router.put('/screens/:screen_id', async (req, res) => {
   try {
     const { screen_id } = req.params;
-    const { screen_name, screen_status, screen_level, screen_manday, system_id, project_id, screen_progress, screen_plan_start, screen_plan_end, screen_actual_start, screen_actual_end, screen_pic } = req.body;
+    const { screen_name, screen_status, screen_level, system_id, screen_pic } = req.body;
+
+    // Check if any other fields are being updated
+    const allowedFields = ['screen_name', 'screen_status', 'screen_level', 'system_id', 'screen_pic'];
+    const invalidFields = Object.keys(req.body).filter(field => !allowedFields.includes(field));
+
+    if (invalidFields.length > 0) {
+      return res.status(400).json({ error: `Invalid fields: ${invalidFields.join(', ')}` });
+    }
 
     const updatedScreenFields = {};
 
     if (screen_name !== undefined) updatedScreenFields.screen_name = screen_name;
     if (screen_status !== undefined) updatedScreenFields.screen_status = screen_status;
     if (screen_level !== undefined) updatedScreenFields.screen_level = screen_level;
-    if (screen_manday !== undefined) updatedScreenFields.screen_manday = screen_manday;
     if (system_id !== undefined) updatedScreenFields.system_id = system_id;
-    if (project_id !== undefined) updatedScreenFields.project_id = project_id;
-    if (screen_progress !== undefined) updatedScreenFields.screen_progress = screen_progress;
-    if (screen_plan_start !== undefined) updatedScreenFields.screen_plan_start = screen_plan_start;
-    if (screen_plan_end !== undefined) updatedScreenFields.screen_plan_end = screen_plan_end;
-    if (screen_actual_start !== undefined) updatedScreenFields.screen_actual_start = screen_actual_start;
-    if (screen_actual_end !== undefined) updatedScreenFields.screen_actual_end = screen_actual_end;
     if (screen_pic !== undefined) updatedScreenFields.screen_pic = screen_pic;
 
     const query = 'UPDATE Screens SET ? WHERE screen_id = ?';
@@ -237,7 +239,6 @@ router.put('/screens/:screen_id', async (req, res) => {
       );
     });
 
-
     res.send('Screen updated successfully');
   } catch (error) {
     console.error('Error updating screen:', error);
@@ -254,15 +255,22 @@ router.delete('/screens/:screen_id', async (req, res) => {
 
     await new Promise((resolve, reject) => {
       db.query(query, [screen_id], (err, result) => {
-        if (err) reject(err);
-        resolve(result);
+        if (err) {
+          console.error('Error deleting screen:', err);
+          reject('Error deleting screen: Database error');
+        } else {
+          if (result.affectedRows === 0) {
+            res.status(404).send('Error deleting screen: Screen not found');
+          } else {
+            res.send('Screen deleted successfully');
+          }
+          resolve(result);
+        }
       });
     });
-
-    res.send('Screen deleted successfully');
   } catch (error) {
     console.error('Error deleting screen:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Error deleting screen:  Please try again later.');
   }
 });
 

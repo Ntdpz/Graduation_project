@@ -4,6 +4,9 @@ const path = require('path');
 const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
 const multer = require('multer');
 const fs = require('fs');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+const uploadSingle = upload.single('user_pic');
 
 router.use(express.json());
 
@@ -16,10 +19,6 @@ router.use(async (req, res, next) => {
     res.status(500).send('Internal Server Error');
   }
 });
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-const uploadSingle = upload.single('user_pic');
-
 
 //login API
 router.post('/login', async (req, res) => {
