@@ -6,26 +6,32 @@
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input type="text" id="project-id" v-model="project_id" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input type="text" id="project-id" v-model="project_id" required />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input type="text" id="project-name-th" v-model="project_name_TH" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input type="text" id="project-name-th" v-model="project_name_TH" required />
         </div>
 
         <div class="form-row">
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
-          <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
+        </div>
+
+        <div class="form-row">
+          <label for="project-progress" class="label">Project Progress:</label>
+          <input type="number" id="project-progress" v-model="project_progress" required />
+        </div>
+
+        <div class="form-row">
+          <label for="project-plan-start" class="label">Project Plan Start:</label>
+          <input type="date" id="project-plan-start" v-model="project_plan_start" required />
+        </div>
+
+        <div class="form-row">
+          <label for="project-plan-end" class="label">Project Plan End:</label>
+          <input type="date" id="project-plan-end" v-model="project_plan_end" required />
         </div>
 
         <div class="buttons">
