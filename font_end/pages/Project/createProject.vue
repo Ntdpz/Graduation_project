@@ -81,7 +81,7 @@ export default {
           project_plan_end: this.project_plan_end,
         };
 
-        await this.$axios.post("/api/projects", projectData);
+        await this.$axios.post("http://localhost:8080/api/projects", projectData);
 
         console.log("Project created successfully");
         this.resetForm();

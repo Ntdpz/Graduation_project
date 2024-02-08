@@ -161,7 +161,7 @@ export default {
         if (confirmResult.isConfirmed) {
           // User confirmed, proceed with deletion
           const response = await this.$axios.delete(
-            `/api/projects/${project.project_id}`
+            `http://localhost:8080/api/projects/${project.project_id}`
           );
 
           if (response.status === 200) {
@@ -206,7 +206,7 @@ export default {
 
     async fetchProjects() {
       try {
-        const response = await this.$axios.get("/api/projects");
+        const response = await this.$axios.get("http://localhost:8080/api/projects");
         this.projects = response.data;
       } catch (error) {
         console.error("Error fetching projects:", error);
