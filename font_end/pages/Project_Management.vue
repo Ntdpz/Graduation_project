@@ -15,9 +15,9 @@
       </v-col>
 
       <v-col class="text-right">
-        <v-btn icon @click="handleIconClick" color="white">
-          <router-link to="/project/createProject" style="color: #000000">
-            Create Project
+        <v-btn @click="handleIconClick" color="#9747FF">
+          <router-link to="/project/createProject" style="color: #9747FF" >
+            <span style="margin: 0; color: #ffffff">Create Project</span>
           </router-link>
         </v-btn>
       </v-col>
