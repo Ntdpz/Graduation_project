@@ -26,13 +26,13 @@
 
         <div class="form-row">
           <label for="project-plan-start" class="label">Project Plan Start:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_start" required />
+          <input type="date" id="project-plan-start" v-model="project_plan_start" required class="date-input" />
         </div>
 
         <div class="form-row">
           <label for="project-plan-end" class="label">Project Plan End:</label>
-          <input type="date" id="project-plan-end" v-model="project_plan_end" required />
-        </div>
+          <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
+          </div>
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">Confirm</button>
@@ -137,7 +137,9 @@ export default {
 .create-project {
   width: 400px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(59, 58, 58, 0.1);
+  background-color: rgb(255, 255, 255);
+  margin: 20px auto;
 }
 
 .form-row {
@@ -147,20 +149,21 @@ export default {
 }
 
 .label {
-  color: white;
+  color: rgb(0, 0, 0);
   margin-bottom: 5px;
 }
 
 input {
-  color: white;
+  color: rgb(0, 0, 0);
   background-color: transparent;
-  border: 1px solid white;
+  border: 1px solid rgb(0, 0, 0);
   padding: 8px;
   border-radius: 5px;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+input.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+  opacity: 1;
 }
 
 .buttons {
@@ -185,5 +188,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .cancel-button {
   background-color: #f44336;
+}
+
+h1 {
+  color: black;
 }
 </style>
