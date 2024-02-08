@@ -6,22 +6,35 @@
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input type="text" id="project-id" v-model="project_id" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input
+            type="text"
+            id="project-id"
+            v-model="project_id"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input type="text" id="project-name-th" v-model="project_name_TH" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input
+            type="text"
+            id="project-name-th"
+            v-model="project_name_TH"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
+<<<<<<< HEAD
           <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
         </div>
 
@@ -39,6 +52,13 @@
           <label for="project-plan-end" class="label">Project Plan End:</label>
           <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
           </div>
+=======
+          <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
+        </div>
+>>>>>>> main
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -93,7 +113,10 @@ export default {
           project_plan_end: this.project_plan_end,
         };
 
-        await this.$axios.post("/api/projects", projectData);
+        await this.$axios.post(
+          "http://localhost:8080/api/projects",
+          projectData
+        );
 
         console.log("Project created successfully");
         this.resetForm();
@@ -154,9 +177,7 @@ export default {
 .create-project {
   width: 400px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(59, 58, 58, 0.1);
-  background-color: rgb(255, 255, 255);
-  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .form-row {
@@ -166,23 +187,36 @@ export default {
 }
 
 .label {
+<<<<<<< HEAD
   color: rgb(0, 0, 0);
+=======
+  color: black;
+>>>>>>> main
   margin-bottom: 5px;
 }
 
 input {
+<<<<<<< HEAD
   color: rgb(0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(0, 0, 0);
+=======
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
+>>>>>>> main
   padding: 8px;
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
 input.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0);
   opacity: 1;
 }
 
+=======
+>>>>>>> main
 .buttons {
   display: flex;
   justify-content: space-between;
@@ -205,9 +239,5 @@ input.date-input::-webkit-calendar-picker-indicator {
 
 .cancel-button {
   background-color: #f44336;
-}
-
-h1 {
-  color: black;
 }
 </style>

@@ -133,4 +133,23 @@ export default {
     }
   }
 }
+<<<<<<< HEAD
 </script>
+=======
+
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-title {
+  text-decoration: none !important;
+  color: white !important;
+  border-bottom: none !important;
+}
+
+.custom-spacer {
+  width: 20px;
+}
+</style>
+>>>>>>> main

@@ -11,10 +11,17 @@
         <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
+<<<<<<< HEAD
       <v-col class="text-left">
         <v-btn icon @click="handleIconClick" color="white">
           <router-link to="/project/createProject" style="color: #000000">
             <v-icon>mdi-plus-thick</v-icon>
+=======
+      <v-col class="text-right" style="margin-right: auto">
+        <v-btn @click="handleIconClick" color="#9747FF">
+          <router-link to="/project/createProject" style="color: #9747FF">
+            <span style="margin: 0; color: #ffffff"> + Create Project</span>
+>>>>>>> main
           </router-link>
         </v-btn>
       </v-col>
@@ -76,9 +83,12 @@ export default {
     return {
       greeting: "",
       currentDateTime: "",
+<<<<<<< HEAD
       projects: [ {
 
         },], // Assuming you have projects data
+=======
+>>>>>>> main
       editDialog: false,
       editedProject: { project_name_TH: "", project_name_ENG: "" },
       projects: [], // Added projects data array
@@ -164,7 +174,7 @@ export default {
         if (confirmResult.isConfirmed) {
           // User confirmed, proceed with deletion
           const response = await this.$axios.delete(
-            `/api/projects/${project.project_id}`
+            `http://localhost:8080/api/projects/${project.project_id}`
           );
 
           if (response.status === 200) {
@@ -209,7 +219,7 @@ export default {
 
     async fetchProjects() {
       try {
-        const response = await this.$axios.get("/api/projects");
+        const response = await this.$axios.get("http://localhost:8080/api/projects");
         this.projects = response.data;
       } catch (error) {
         console.error("Error fetching projects:", error);
