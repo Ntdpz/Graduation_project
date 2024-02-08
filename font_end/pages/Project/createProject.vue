@@ -6,39 +6,81 @@
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input type="text" id="project-id" v-model="project_id" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input
+            type="text"
+            id="project-id"
+            v-model="project_id"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input type="text" id="project-name-th" v-model="project_name_TH" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input
+            type="text"
+            id="project-name-th"
+            v-model="project_name_TH"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
-          <label for="project-name-eng" class="label">Project Name (ENG):</label>
-          <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
+          <label for="project-name-eng" class="label"
+            >Project Name (ENG):</label
+          >
+          <input
+            type="text"
+            id="project-name-eng"
+            v-model="project_name_ENG"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-progress" class="label">Project Progress:</label>
-          <input type="number" id="project-progress" v-model="project_progress" required />
+          <input
+            type="number"
+            id="project-progress"
+            v-model="project_progress"
+            required
+          />
         </div>
 
         <div class="form-row">
-          <label for="project-plan-start" class="label">Project Plan Start:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_start" required class="date-input" />
+          <label for="project-plan-start" class="label"
+            >Project Plan Start:</label
+          >
+          <input
+            type="date"
+            id="project-plan-start"
+            v-model="project_plan_start"
+            required
+            class="date-input"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-plan-end" class="label">Project Plan End:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
-          </div>
+          <input
+            type="date"
+            id="project-plan-start"
+            v-model="project_plan_end"
+            required
+            class="date-input"
+          />
+        </div>
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -72,13 +114,17 @@ export default {
     async handleSubmit() {
       try {
         // Check if any required fields are empty
-        if (!this.project_id || !this.project_name_TH || !this.project_name_ENG) {
+        if (
+          !this.project_id ||
+          !this.project_name_TH ||
+          !this.project_name_ENG
+        ) {
           // Notify the user and prevent form submission
           Swal.fire({
-            icon: 'error',
-            title: 'Incomplete Data',
-            text: 'Please fill in all required fields.',
-            confirmButtonColor: '#00ff51'
+            icon: "error",
+            title: "Incomplete Data",
+            text: "Please fill in all required fields.",
+            confirmButtonColor: "#00ff51",
           });
           return;
         }
@@ -93,7 +139,10 @@ export default {
           project_plan_end: this.project_plan_end,
         };
 
-        await this.$axios.post("http://localhost:8080/api/projects", projectData);
+        await this.$axios.post(
+          "http://localhost:8080/api/projects",
+          projectData
+        );
 
         console.log("Project created successfully");
         this.resetForm();
@@ -171,18 +220,16 @@ export default {
 }
 
 input {
-
   color: rgb(0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(0, 0, 0);
   color: black;
   background-color: transparent;
   border: 1px solid black;
-
+}
 input.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0);
   opacity: 1;
-  }
 }
 
 .buttons {
