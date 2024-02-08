@@ -6,46 +6,26 @@
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input
-            type="text"
-            id="project-id"
-            v-model="project_id"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
+          <input type="text" id="project-id" v-model="project_id" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input
-            type="text"
-            id="project-name-th"
-            v-model="project_name_TH"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
+          <input type="text" id="project-name-th" v-model="project_name_TH" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
         </div>
 
         <div class="form-row">
-          <label for="project-name-eng" class="label"
-            >Project Name (ENG):</label
-          >
-          <input
-            type="text"
-            id="project-name-eng"
-            v-model="project_name_ENG"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
+          <label for="project-name-eng" class="label">Project Name (ENG):</label>
+          <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
         </div>
 
         <div class="buttons">
