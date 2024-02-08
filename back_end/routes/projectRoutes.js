@@ -24,13 +24,10 @@ router.post("/projects", async (req, res) => {
       project_id,
       project_name_TH,
       project_name_ENG,
-      project_progress,
-      project_plan_start,
-      project_plan_end,
     } = req.body;
 
     const query =
-      "INSERT INTO Projects (project_id, project_name_TH, project_name_ENG, project_progress, project_plan_start, project_plan_end) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO Projects (project_id, project_name_TH, project_name_ENG) VALUES (?, ?, ?)";
 
     await new Promise((resolve, reject) => {
       db.query(
@@ -39,9 +36,6 @@ router.post("/projects", async (req, res) => {
           project_id,
           project_name_TH,
           project_name_ENG,
-          project_progress,
-          project_plan_start,
-          project_plan_end,
         ],
         (err, result) => {
           if (err) reject(err);
@@ -56,6 +50,7 @@ router.post("/projects", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // ดึงข้อมูลโปรเจ็คทั้งหมด
 router.get('/projects', async (req, res) => {
@@ -239,24 +234,64 @@ router.delete("/projects/:project_id", async (req, res) => {
   try {
     const { project_id } = req.params;
 
-    const query = "DELETE FROM Projects WHERE project_id = ?";
-
+    // ลบข้อมูลจากตาราง Tasks ที่เกี่ยวข้องกับ screens ใน systems ของโปรเจกต์ที่ระบุ
+    const deleteTasksQuery = "DELETE FROM Tasks WHERE screen_id IN (SELECT screen_id FROM Screens WHERE system_id IN (SELECT system_id FROM Systems WHERE project_id = ?))";
     await new Promise((resolve, reject) => {
-      db.query(query, [project_id], (err, result) => {
+      db.query(deleteTasksQuery, [project_id], (err, result) => {
         if (err) {
-          console.error("Error deleting project:", err); // เพิ่มข้อมูลเพื่ออธิบายข้อผิดพลาด
+          console.error("Error deleting tasks related to the project:", err);
           reject(err);
         }
         resolve(result);
       });
     });
 
-    res.send("Project deleted successfully");
+    // ลบข้อมูลจากตาราง Screens ที่เกี่ยวข้องกับ systems ในโปรเจกต์ที่ระบุ
+    const deleteScreensQuery = "DELETE FROM Screens WHERE system_id IN (SELECT system_id FROM Systems WHERE project_id = ?)";
+    await new Promise((resolve, reject) => {
+      db.query(deleteScreensQuery, [project_id], (err, result) => {
+        if (err) {
+          console.error("Error deleting screens related to the project:", err);
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    // ลบข้อมูลจากตาราง Systems ที่เกี่ยวข้องกับโปรเจกต์ที่ระบุ
+    const deleteSystemsQuery = "DELETE FROM Systems WHERE project_id = ?";
+    await new Promise((resolve, reject) => {
+      db.query(deleteSystemsQuery, [project_id], (err, result) => {
+        if (err) {
+          console.error("Error deleting systems related to the project:", err);
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    // ลบข้อมูลโปรเจกต์จากตาราง Projects
+    const deleteProjectQuery = "DELETE FROM Projects WHERE project_id = ?";
+    await new Promise((resolve, reject) => {
+      db.query(deleteProjectQuery, [project_id], (err, result) => {
+        if (err) {
+          console.error("Error deleting project:", err);
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    res.send("Project and related data deleted successfully");
   } catch (error) {
-    console.error("Error deleting project:", error); // แสดงข้อผิดพลาดที่เกิดขึ้น
-    res.status(500).send("An error occurred while deleting the project. Please try again later."); // แสดงข้อความข้อผิดพลาดที่เข้าใจง่าย
+    console.error("Error deleting project and related data:", error);
+    res.status(500).send("An error occurred while deleting the project and related data. Please try again later.");
   }
 });
+
+
+
+
 
 
 module.exports = router;
