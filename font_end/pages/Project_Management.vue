@@ -8,7 +8,7 @@
       <v-col class="text-left">
         <v-btn icon @click="handleIconClick" color="white">
           <router-link to="/project/createProject" style="color: #000000">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-thick</v-icon>
           </router-link>
         </v-btn>
       </v-col>
@@ -78,40 +78,7 @@ export default {
       greeting: "",
       currentDateTime: "",
       projects: [ {
-          project_id: 1,
-          project_name_TH: "Project A",
-          project_name_ENG: "Project A",
-          project_progress: 60,
-          project_plan_start: "2024-01-01",
-          project_plan_end: "2024-03-31",
-          project_code: "PA",
-          project_manager: "John Doe",
-          formatted_project_code: "PROJ-001",
-          formatted_project_manager: "JOHN DOE",
-        },
-        {
-          project_id: 2,
-          project_name_TH: "Project B",
-          project_name_ENG: "Project B",
-          project_progress: 80,
-          project_plan_start: "2024-02-15",
-          project_plan_end: "2024-04-30",
-          project_code: "PB",
-          project_manager: "Jane Smith",
-          formatted_project_code: "PROJ-002",
-          formatted_project_manager: "JANE SMITH",
-        },
-        {
-          project_id: 3,
-          project_name_TH: "Project C",
-          project_name_ENG: "Project C",
-          project_progress: 40,
-          project_plan_start: "2024-03-01",
-          project_plan_end: "2024-05-15",
-          project_code: "PC",
-          project_manager: "Bob Johnson",
-          formatted_project_code: "PROJ-003",
-          formatted_project_manager: "BOB JOHNSON",
+
         },], // Assuming you have projects data
       editDialog: false,
       editedProject: {}, // Store edited project data here
