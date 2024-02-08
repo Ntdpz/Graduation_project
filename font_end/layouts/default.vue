@@ -120,4 +120,8 @@ body {
 .custom-spacer {
   width: 20px;
 }
+<<<<<<< HEAD
 </>
+=======
+</style>
+>>>>>>> bbbe2d8123227eb7a32d07c2b8bde58ee6d43168
