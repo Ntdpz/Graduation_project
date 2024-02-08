@@ -1,13 +1,10 @@
 <template>
-  <div
-    class="dashboard"
-    style="
+  <div class="dashboard" style="
       background-color: #ffffff;
       padding: 10px 70px;
       border-radius: 0;
       margin-right: 30px;
-    "
-  >
+    ">
     <v-row no-gutters class="mt-4">
       <v-col class="text-left" style="margin-right: 16px">
         <h1 class="text-01">{{ greeting }}, Bee</h1>
@@ -15,20 +12,15 @@
       </v-col>
 
       <v-col class="text-right">
-        <v-btn icon @click="handleIconClick" color="white">
-          <router-link to="/project/createProject" style="color: #000000">
-            Create Project
+        <v-btn @click="handleIconClick" color="#9747FF">
+          <router-link to="/project/createProject" style="color: #9747FF" >
+            <span style="margin: 0; color: #ffffff">Create Project</span>
           </router-link>
         </v-btn>
       </v-col>
 
       <v-col class="text-right" style="margin-right: 16px">
-        <v-btn
-          class="work-item"
-          color="#9747FF"
-          @click="handleButtonClick"
-          style="padding: 5px"
-        >
+        <v-btn class="work-item" color="#9747FF" @click="handleButtonClick" style="padding: 5px">
           <p style="margin: 0; color: white">All Projects</p>
         </v-btn>
       </v-col>
@@ -49,12 +41,9 @@
 
           <v-card-actions>
             <!-- Edit button -->
-            <v-btn class="mx-1 project-button" @click="editProject(project)"
-              >Edit
+            <v-btn class="mx-1 project-button" @click="editProject(project)">Edit
             </v-btn>
-            <v-btn class="mx-4 project-button" @click="deleteProject(project)"
-              >Delete</v-btn
-            >
+            <v-btn class="mx-4 project-button" @click="deleteProject(project)">Delete</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -67,14 +56,8 @@
           <!-- Form to edit project details -->
           <v-form @submit.prevent="saveEditedProject">
             <!-- Include form fields for editing project details -->
-            <v-text-field
-              v-model="editedProject.project_name_TH"
-              label="Project Name (TH)"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedProject.project_name_ENG"
-              label="Project Name (ENG)"
-            ></v-text-field>
+            <v-text-field v-model="editedProject.project_name_TH" label="Project Name (TH)"></v-text-field>
+            <v-text-field v-model="editedProject.project_name_ENG" label="Project Name (ENG)"></v-text-field>
             <!-- Button to save changes -->
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
