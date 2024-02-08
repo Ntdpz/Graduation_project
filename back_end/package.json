@@ -10,7 +10,10 @@
   "license": "ISC",
   "dependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "body-parser": "^1.20.2",
+=======
+>>>>>>> 5cb5c02 (-)
 =======
 >>>>>>> 5cb5c02 (-)
     "cors": "^2.8.5",
