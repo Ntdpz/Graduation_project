@@ -29,7 +29,7 @@
 
         <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
         <router-link to="/" style="text-decoration: none; color: #000000;">
-          <v-toolbar-title class="custom-title">Progress Tracking</v-toolbar-title>
+          <v-toolbar-title  class="custom-title" style="color: #000000;">Progress Tracking </v-toolbar-title>
         </router-link>
 
         <v-spacer></v-spacer>
@@ -120,4 +120,4 @@ body {
 .custom-spacer {
   width: 20px;
 }
-</style>
+</>
