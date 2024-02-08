@@ -33,7 +33,6 @@
         </div>
 
         <div class="form-row">
-<<<<<<< HEAD
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
           <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
         </div>
@@ -52,22 +51,6 @@
           <label for="project-plan-end" class="label">Project Plan End:</label>
           <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
           </div>
-=======
-          <label for="project-name-eng" class="label"
-            >Project Name (ENG):</label
-          >
-          <input
-            type="text"
-            id="project-name-eng"
-            v-model="project_name_ENG"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
-        </div>
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -182,36 +165,25 @@ export default {
 }
 
 .label {
-<<<<<<< HEAD
   color: rgb(0, 0, 0);
-=======
-  color: black;
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
   margin-bottom: 5px;
 }
 
 input {
-<<<<<<< HEAD
+
   color: rgb(0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(0, 0, 0);
-=======
   color: black;
   background-color: transparent;
   border: 1px solid black;
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
-  padding: 8px;
-  border-radius: 5px;
-}
 
-<<<<<<< HEAD
 input.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0);
   opacity: 1;
+  }
 }
 
-=======
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
 .buttons {
   display: flex;
   justify-content: space-between;
