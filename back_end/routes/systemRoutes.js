@@ -186,10 +186,34 @@ router.delete('/systems/:system_id', async (req, res) => {
   try {
     const { system_id } = req.params;
 
-    const query = 'DELETE FROM Systems WHERE system_id = ?';
-
+    // Delete tasks associated with the system
+    const deleteTasksQuery = 'DELETE FROM Tasks WHERE screen_id IN (SELECT screen_id FROM Screens WHERE system_id = ?)';
     await new Promise((resolve, reject) => {
-      db.query(query, [system_id], (err, result) => {
+      db.query(deleteTasksQuery, [system_id], (err, result) => {
+        if (err) {
+          console.error('Error deleting tasks:', err);
+          return reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    // Delete screens associated with the system
+    const deleteScreensQuery = 'DELETE FROM Screens WHERE system_id = ?';
+    await new Promise((resolve, reject) => {
+      db.query(deleteScreensQuery, [system_id], (err, result) => {
+        if (err) {
+          console.error('Error deleting screens:', err);
+          return reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    // Delete the system
+    const deleteSystemQuery = 'DELETE FROM Systems WHERE system_id = ?';
+    await new Promise((resolve, reject) => {
+      db.query(deleteSystemQuery, [system_id], (err, result) => {
         if (err) {
           console.error('Error deleting system:', err);
           return reject(err);
@@ -204,6 +228,7 @@ router.delete('/systems/:system_id', async (req, res) => {
     res.status(500).send('An error occurred while deleting the system. Please try again later.');
   }
 });
+
 
 
 
