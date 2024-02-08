@@ -11,9 +11,9 @@
         <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
-      <v-col class="text-right">
+      <v-col class="text-right" style="margin-right: auto">
         <v-btn @click="handleIconClick" color="#9747FF">
-          <router-link to="/project/createProject" style="color: #9747FF" >
+          <router-link to="/project/createProject" style="color: #9747FF">
             <span style="margin: 0; color: #ffffff">Create Project</span>
           </router-link>
         </v-btn>
