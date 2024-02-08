@@ -19,19 +19,19 @@
       <!-- Loop through users and display cards -->
       <v-col v-for="(user, index) in filteredUsers" :key="index" cols="12" md="4">
         <!-- User card -->
-        <v-card class="mx-auto" max-width="400">
+        <v-card color="white" class="mx-auto" max-width="400">
           <!-- User image -->
           <v-img class="align-end text-white" height="200" :src="user.user_pic" cover @click="viewDetails(user)">
-            <v-card-title @click="viewDetails(user)">{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
+            <v-card-title style="color: black;" @click="viewDetails(user)">{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
           </v-img>
 
           <!-- User position -->
-          <v-card-subtitle class="pt-4">
+          <v-card-subtitle class="pt-4" style="color: black;">
             {{ user.user_position }}
           </v-card-subtitle>
 
           <!-- User details -->
-          <v-card-text>
+          <v-card-text style="color: black;">
             <div>{{ user.user_firstname }} {{ user.user_lastname }}</div>
             <div>{{ user.user_department }}</div>
             <div>{{ user.user_email }}</div>
@@ -51,10 +51,10 @@
     </v-row>
 
     <!-- Edit User Form Dialog -->
-    <v-dialog v-model="editDialog" max-width="600">
-      <v-card>
-        <v-card-title>Edit User</v-card-title>
-        <v-card-text>
+    <v-dialog v-model="editDialog" max-width="600" >
+      <v-card style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">
+        <v-card-title >Edit User</v-card-title>
+        <v-card-text style="color: rgb(0, 0, 0);">
           <!-- Form to edit user details -->
           <v-form @submit.prevent="saveEditedUser">
             <v-text-field v-model="editedUser.user_firstname" label="First Name"></v-text-field>
@@ -72,7 +72,7 @@
               <input type="file" @change="handleImageChange" />
             </div>
             <!-- Button to save changes -->
-            <v-btn type="submit">Save Changes</v-btn>
+            <v-btn type="submit" color="blue" style="color: white;">Save Changes</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
