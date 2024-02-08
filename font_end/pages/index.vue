@@ -27,22 +27,6 @@ export default {
 </script>
 
 <style scoped>
-.button-spacing:hover {
-  transform: translateY(-2px);
-<<<<<<< HEAD
-}
-
-.button-spacing {
-  margin-top: 40px;
-  margin-right: 20px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.button-spacing:hover {
-  transform: translateY(-2px);
-}
-
 .button-spacing {
   margin-top: 60px;
   /* หรือค่าที่คุณต้องการ */
