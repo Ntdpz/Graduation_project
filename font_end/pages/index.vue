@@ -30,6 +30,7 @@ export default {
 .button-spacing:hover {
   transform: translateY(-2px);
 }
+
 .button-spacing {
   margin-top: 40px;
   margin-right: 20px;
@@ -40,8 +41,9 @@ export default {
 .button-spacing:hover {
   transform: translateY(-2px);
 }
+
 .button-spacing {
-  margin-top: 60px; /* หรือค่าที่คุณต้องการ */
+  margin-top: 60px;
+  /* หรือค่าที่คุณต้องการ */
   margin-right: 40px;
-}
-</style>
+}</style>
