@@ -11,17 +11,10 @@
         <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
-<<<<<<< HEAD
-      <v-col class="text-left">
-        <v-btn icon @click="handleIconClick" color="white">
-          <router-link to="/project/createProject" style="color: #000000">
-            <v-icon>mdi-plus-thick</v-icon>
-=======
       <v-col class="text-right" style="margin-right: auto">
         <v-btn @click="handleIconClick" color="#9747FF">
           <router-link to="/project/createProject" style="color: #9747FF">
             <span style="margin: 0; color: #ffffff"> + Create Project</span>
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
           </router-link>
         </v-btn>
       </v-col>
@@ -83,12 +76,6 @@ export default {
     return {
       greeting: "",
       currentDateTime: "",
-<<<<<<< HEAD
-      projects: [ {
-
-        },], // Assuming you have projects data
-=======
->>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
       editDialog: false,
       editedProject: { project_name_TH: "", project_name_ENG: "" },
       projects: [], // Added projects data array

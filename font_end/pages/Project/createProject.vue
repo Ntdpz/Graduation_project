@@ -22,30 +22,11 @@
 
         <div class="form-row">
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
-<<<<<<< HEAD
-          <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
-=======
           <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
             color: 'black',
             backgroundColor: formSubmitted ? 'gray' : 'transparent',
           }" />
->>>>>>> ab15118b40534caf05139732834cbb0fdca87686
         </div>
-
-        <div class="form-row">
-          <label for="project-progress" class="label">Project Progress:</label>
-          <input type="number" id="project-progress" v-model="project_progress" required />
-        </div>
-
-        <div class="form-row">
-          <label for="project-plan-start" class="label">Project Plan Start:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_start" required class="date-input" />
-        </div>
-
-        <div class="form-row">
-          <label for="project-plan-end" class="label">Project Plan End:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
-          </div>
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -161,9 +142,7 @@ export default {
 .create-project {
   width: 400px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(59, 58, 58, 0.1);
-  background-color: rgb(255, 255, 255);
-  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .form-row {
@@ -173,23 +152,16 @@ export default {
 }
 
 .label {
-  color: rgb(0, 0, 0);
+  color: black;
   margin-bottom: 5px;
 }
 
 input {
-
-  color: rgb(0, 0, 0);
-  background-color: transparent;
-  border: 1px solid rgb(0, 0, 0);
   color: black;
   background-color: transparent;
   border: 1px solid black;
-
-input.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(0);
-  opacity: 1;
-  }
+  padding: 8px;
+  border-radius: 5px;
 }
 
 .buttons {
@@ -214,9 +186,5 @@ input.date-input::-webkit-calendar-picker-indicator {
 
 .cancel-button {
   background-color: #f44336;
-}
-
-h1 {
-  color: black;
 }
 </style>
