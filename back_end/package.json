@@ -9,15 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-<<<<<<< HEAD
     "form-data": "^4.0.0",
     "moment": "^2.30.1",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.0"
-=======
-    "mysql": "^2.18.1"
->>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
   }
 }
