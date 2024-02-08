@@ -18,7 +18,7 @@
                 @click="handleMenuItemClick(item.title)"
               >
                 <v-list-item-title style="color: black;">{{ item.title }}</v-list-item-title>
-              </v-list-item>
+              </v-list-item> 
             </v-list>            
           </v-menu>
         </nav>
@@ -33,7 +33,7 @@
 
         <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
         <router-link to="/" style="text-decoration: none; color: #000000;">
-          <v-toolbar-title class="custom-title">Progress Tracking</v-toolbar-title>
+          <v-toolbar-title class="custom-title; style=color:black"> Progress Tracking </v-toolbar-title>
         </router-link>
 
         <v-spacer></v-spacer>
