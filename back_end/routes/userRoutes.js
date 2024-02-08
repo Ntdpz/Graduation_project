@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { db, connectToDatabase, bcrypt } = require(path.join(__dirname, '../modules/db'));
+const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
 const multer = require('multer');
 const fs = require('fs');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const uploadSingle = upload.single('user_pic');
+const bcrypt = require('bcrypt');
+
 
 router.use(express.json());
 
@@ -25,23 +27,34 @@ router.post('/login', async (req, res) => {
   try {
     const { user_id, user_password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(user_password, 10);
-
+    // ค้นหาผู้ใช้ในฐานข้อมูลโดยใช้ user_id
     const query = 'SELECT * FROM Users WHERE user_id = ?';
     db.query(query, [user_id], async (err, results) => {
-      if (err) throw err;
+      if (err) {
+        console.error('Error during login:', err);
+        return res.status(500).send('Internal Server Error');
+      }
 
       if (results.length === 0) {
-        res.status(401).json({ error: 'Invalid user_id or password' });
-      } else {
-        const user = results[0];
+        return res.status(401).json({ error: 'Invalid user_id or password' });
+      }
+
+      const user = results[0];
+
+      // ตรวจสอบว่า user_password ไม่เป็น null ก่อนที่จะทำการเปรียบเทียบรหัสผ่าน
+      if (user_password !== null) {
         const match = await bcrypt.compare(user_password, user.user_password);
 
         if (match) {
+          // รหัสผ่านถูกต้อง
           res.json({ message: 'Login successful', user });
         } else {
+          // รหัสผ่านไม่ถูกต้อง
           res.status(401).json({ error: 'Invalid user_id or password' });
         }
+      } else {
+        // ถ้า user_password เป็น null
+        res.status(401).json({ error: 'Invalid user_id or password' });
       }
     });
   } catch (error) {
@@ -49,6 +62,23 @@ router.post('/login', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+// Route: ลบ session หรือ token และออกจากระบบ
+router.post('/logout', async (req, res) => {
+  try {
+    // ทำการลบ session หรือ token ของผู้ใช้ที่อยู่ในระบบ
+    // เช่น ลบ session หรือ token ในฐานข้อมูลหรือทำการเคลียร์ข้อมูลจากตัวแปร session
+    // หรือ token ในระบบของคุณ
+    // ส่งคืนการยืนยันล็อกอินออกจากระบบ
+    res.json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 // Route: อัปเดตข้อมูลผู้ใช้
 router.put('/users/:user_id', async (req, res) => {
   try {
