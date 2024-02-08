@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { db, connectToDatabase } = require(path.join(__dirname, '../modules/db'));
+const { db, connectToDatabase, bcrypt } = require(path.join(__dirname, '../modules/db'));
 const multer = require('multer');
 const fs = require('fs');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+const uploadSingle = upload.single('user_pic');
 
 router.use(express.json());
 
@@ -16,30 +19,31 @@ router.use(async (req, res, next) => {
     res.status(500).send('Internal Server Error');
   }
 });
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-const uploadSingle = upload.single('user_pic');
-
 
 //login API
 router.post('/login', async (req, res) => {
   try {
     const { user_id, user_password } = req.body;
 
-    const query = 'SELECT * FROM Users WHERE user_id = ? AND user_password = ?';
+    const hashedPassword = await bcrypt.hash(user_password, 10);
 
-    const user = await new Promise((resolve, reject) => {
-      db.query(query, [user_id, user_password], (err, results) => {
-        if (err) reject(err);
-        resolve(results);
-      });
+    const query = 'SELECT * FROM Users WHERE user_id = ?';
+    db.query(query, [user_id], async (err, results) => {
+      if (err) throw err;
+
+      if (results.length === 0) {
+        res.status(401).json({ error: 'Invalid user_id or password' });
+      } else {
+        const user = results[0];
+        const match = await bcrypt.compare(user_password, user.user_password);
+
+        if (match) {
+          res.json({ message: 'Login successful', user });
+        } else {
+          res.status(401).json({ error: 'Invalid user_id or password' });
+        }
+      }
     });
-
-    if (user.length === 0) {
-      res.status(401).json({ error: 'Invalid user_id or password' });
-    } else {
-      res.json({ message: 'Login successful', user: user[0] });
-    }
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).send('Internal Server Error');

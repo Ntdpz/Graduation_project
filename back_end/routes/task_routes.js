@@ -16,8 +16,6 @@ router.use(async (req, res, next) => {
 });
 
 // Route สำหรับสร้าง Task
-// Route สำหรับสร้าง Task
-// Route สำหรับสร้าง Task
 router.post('/tasks', async (req, res) => {
   try {
     const {
@@ -86,7 +84,9 @@ router.get('/tasks', async (req, res) => {
         resolve(results.map(task => ({
           ...task,
           task_plan_start: moment(task.task_plan_start).format('YYYY-MM-DD'),
-          task_plan_end: moment(task.task_plan_end).format('YYYY-MM-DD')
+          task_plan_end: moment(task.task_plan_end).format('YYYY-MM-DD'),
+          task_actual_start: moment(task.task_actual_start).format('YYYY-MM-DD HH:mm:ss'),
+          task_actual_end: moment(task.task_actual_end).format('YYYY-MM-DD HH:mm:ss')
         })));
       });
     });
@@ -98,6 +98,36 @@ router.get('/tasks', async (req, res) => {
   }
 });
 
+router.get('/tasks/:task_id', async (req, res) => {
+  try {
+    const { task_id } = req.params;
+
+    const query = 'SELECT * FROM Tasks WHERE task_id = ?';
+
+    const task = await new Promise((resolve, reject) => {
+      db.query(query, [task_id], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (task.length === 0) {
+      res.status(404).json({ error: 'Task not found' });
+    } else {
+      // Format task_plan_start and task_plan_end
+      task[0].task_plan_start = moment(task[0].task_plan_start).format('YYYY-MM-DD');
+      task[0].task_plan_end = moment(task[0].task_plan_end).format('YYYY-MM-DD');
+      // Format task_actual_start and task_actual_end
+      task[0].task_actual_start = moment(task[0].task_actual_start).format('YYYY-MM-DD HH:mm:ss');
+      task[0].task_actual_end = moment(task[0].task_actual_end).format('YYYY-MM-DD HH:mm:ss');
+
+      res.json(task[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching task by ID:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 // Route สำหรับอัปเดตข้อมูล Task
 router.put('/tasks/:task_id', async (req, res) => {

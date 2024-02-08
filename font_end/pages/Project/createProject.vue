@@ -6,15 +6,34 @@
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input type="text" id="project-id" v-model="project_id" required />
+          <input
+            type="text"
+            id="project-id"
+            v-model="project_id"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input type="text" id="project-name-th" v-model="project_name_TH" required />
+          <input
+            type="text"
+            id="project-name-th"
+            v-model="project_name_TH"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
         </div>
 
         <div class="form-row">
+<<<<<<< HEAD
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
           <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
         </div>
@@ -33,10 +52,30 @@
           <label for="project-plan-end" class="label">Project Plan End:</label>
           <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
           </div>
+=======
+          <label for="project-name-eng" class="label"
+            >Project Name (ENG):</label
+          >
+          <input
+            type="text"
+            id="project-name-eng"
+            v-model="project_name_ENG"
+            required
+            :style="{
+              color: 'black',
+              backgroundColor: formSubmitted ? 'gray' : 'transparent',
+            }"
+          />
+        </div>
+>>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
 
         <div class="buttons">
-          <button type="submit" @click="handleConfirm" class="confirm-button">Confirm</button>
-          <button type="button" @click="handleCancel" class="cancel-button">Cancel</button>
+          <button type="submit" @click="handleConfirm" class="confirm-button">
+            Confirm
+          </button>
+          <button type="button" @click="handleCancel" class="cancel-button">
+            Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -44,18 +83,18 @@
 </template>
 
 <script>
-// Import SweetAlert library
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
-      project_id: '',
-      project_name_TH: '',
-      project_name_ENG: '',
+      project_id: "",
+      project_name_TH: "",
+      project_name_ENG: "",
       project_progress: 0,
-      project_plan_start: '',
-      project_plan_end: '',
+      project_plan_start: "",
+      project_plan_end: "",
+      formSubmitted: false,
     };
   },
   methods: {
@@ -70,57 +109,51 @@ export default {
           project_plan_end: this.project_plan_end,
         };
 
-        // Assuming you have an Axios instance available in your project
-        // If not, you can import Axios or use fetch API
-        await this.$axios.post('/api/projects', projectData);
+        await this.$axios.post("/api/projects", projectData);
 
-        console.log('Project created successfully');
-        this.resetForm(); // Implement this method to reset the form
+        console.log("Project created successfully");
+        this.resetForm();
+        this.formSubmitted = true;
       } catch (error) {
-        console.error('Error creating project:', error);
-        // Handle errors or show a user-friendly message
+        console.error("Error creating project:", error);
       }
     },
     async handleConfirm() {
       try {
         const result = await Swal.fire({
-          title: 'Confirm Project Creation',
-          text: 'Are you sure you want to create this project?',
-          icon: 'question',
+          title: "Confirm Project Creation",
+          text: "Are you sure you want to create this project?",
+          icon: "question",
           showCancelButton: true,
-          confirmButtonColor: '#00ff51',
-          cancelButtonColor: '#f44336',
-          confirmButtonText: 'Yes, create it!',
+          confirmButtonColor: "#00ff51",
+          cancelButtonColor: "#f44336",
+          confirmButtonText: "Yes, create it!",
         });
 
         if (result.isConfirmed) {
-          await this.handleSubmit(); // Continue with form submission
-
-          // Use Vue Router to navigate back to Project_Management
-          this.$router.push({ name: 'Project_Management' });
+          await this.handleSubmit();
+          this.$router.push({ name: "Project_Management" });
         }
       } catch (error) {
-        console.error('Error showing confirmation:', error);
-        // Handle errors or show a user-friendly message
+        console.error("Error showing confirmation:", error);
       }
     },
     handleCancel() {
       Swal.fire({
-        title: 'Project Creation Canceled',
-        icon: 'info',
-        confirmButtonColor: '#00ff51',
+        title: "Project Creation Canceled",
+        icon: "info",
+        confirmButtonColor: "#00ff51",
       }).then(() => {
-        // Use Vue Router to navigate back to Project_Management
-        this.$router.push({ name: 'Project_Management' });
+        this.$router.push({ name: "Project_Management" });
       });
     },
     resetForm() {
-      this.project_id = '';
-      this.project_name_TH = '';
-      this.project_name_ENG = '';
+      this.project_id = "";
+      this.project_name_TH = "";
+      this.project_name_ENG = "";
       this.project_progress = 0;
-      this.project_plan_start = '';
-      this.project_plan_end = '';
+      this.project_plan_start = "";
+      this.project_plan_end = "";
     },
   },
 };
@@ -149,23 +182,36 @@ export default {
 }
 
 .label {
+<<<<<<< HEAD
   color: rgb(0, 0, 0);
+=======
+  color: black;
+>>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
   margin-bottom: 5px;
 }
 
 input {
+<<<<<<< HEAD
   color: rgb(0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(0, 0, 0);
+=======
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
+>>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
   padding: 8px;
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
 input.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0);
   opacity: 1;
 }
 
+=======
+>>>>>>> 3a09ad35821c2f1a1075d5005a09490d81650556
 .buttons {
   display: flex;
   justify-content: space-between;
