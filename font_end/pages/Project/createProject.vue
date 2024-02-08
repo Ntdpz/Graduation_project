@@ -34,31 +34,11 @@
 
         <div class="form-row">
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
-<<<<<<< HEAD
-          <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
-        </div>
-
-        <div class="form-row">
-          <label for="project-progress" class="label">Project Progress:</label>
-          <input type="number" id="project-progress" v-model="project_progress" required />
-        </div>
-
-        <div class="form-row">
-          <label for="project-plan-start" class="label">Project Plan Start:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_start" required class="date-input" />
-        </div>
-
-        <div class="form-row">
-          <label for="project-plan-end" class="label">Project Plan End:</label>
-          <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
-          </div>
-=======
           <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
             color: 'black',
             backgroundColor: formSubmitted ? 'gray' : 'transparent',
           }" />
         </div>
->>>>>>> main
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -187,36 +167,18 @@ export default {
 }
 
 .label {
-<<<<<<< HEAD
-  color: rgb(0, 0, 0);
-=======
   color: black;
->>>>>>> main
   margin-bottom: 5px;
 }
 
 input {
-<<<<<<< HEAD
-  color: rgb(0, 0, 0);
-  background-color: transparent;
-  border: 1px solid rgb(0, 0, 0);
-=======
   color: black;
   background-color: transparent;
   border: 1px solid black;
->>>>>>> main
   padding: 8px;
   border-radius: 5px;
 }
 
-<<<<<<< HEAD
-input.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(0);
-  opacity: 1;
-}
-
-=======
->>>>>>> main
 .buttons {
   display: flex;
   justify-content: space-between;
