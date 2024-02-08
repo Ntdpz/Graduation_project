@@ -78,6 +78,19 @@ export default {
   methods: {
     async handleSubmit() {
       try {
+        // Check if any required fields are empty
+        if (!this.project_id || !this.project_name_TH || !this.project_name_ENG) {
+          // Notify the user and prevent form submission
+          Swal.fire({
+            icon: 'error',
+            title: 'Incomplete Data',
+            text: 'Please fill in all required fields.',
+            confirmButtonColor: '#00ff51'
+          });
+          return;
+        }
+
+        // Proceed with form submission if all required fields are filled
         const projectData = {
           project_id: this.project_id,
           project_name_TH: this.project_name_TH,
