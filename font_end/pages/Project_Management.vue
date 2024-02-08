@@ -11,10 +11,10 @@
         <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
-      <v-col class="text-right">
-        <v-btn @click="handleIconClick" color="#9747FF">
-          <router-link to="/project/createProject" style="color: #9747FF" >
-            <span style="margin: 0; color: #ffffff">Create Project</span>
+      <v-col class="text-left">
+        <v-btn icon @click="handleIconClick" color="white">
+          <router-link to="/project/createProject" style="color: #000000">
+            <v-icon>mdi-plus</v-icon>
           </router-link>
         </v-btn>
       </v-col>
