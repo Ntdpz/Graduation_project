@@ -22,11 +22,23 @@
 
         <div class="form-row">
           <label for="project-name-eng" class="label">Project Name (ENG):</label>
-          <input type="text" id="project-name-eng" v-model="project_name_ENG" required :style="{
-            color: 'black',
-            backgroundColor: formSubmitted ? 'gray' : 'transparent',
-          }" />
+          <input type="text" id="project-name-eng" v-model="project_name_ENG" required />
         </div>
+
+        <div class="form-row">
+          <label for="project-progress" class="label">Project Progress:</label>
+          <input type="number" id="project-progress" v-model="project_progress" required />
+        </div>
+
+        <div class="form-row">
+          <label for="project-plan-start" class="label">Project Plan Start:</label>
+          <input type="date" id="project-plan-start" v-model="project_plan_start" required class="date-input" />
+        </div>
+
+        <div class="form-row">
+          <label for="project-plan-end" class="label">Project Plan End:</label>
+          <input type="date" id="project-plan-start" v-model="project_plan_end" required class="date-input" />
+          </div>
 
         <div class="buttons">
           <button type="submit" @click="handleConfirm" class="confirm-button">
@@ -142,7 +154,9 @@ export default {
 .create-project {
   width: 400px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(59, 58, 58, 0.1);
+  background-color: rgb(255, 255, 255);
+  margin: 20px auto;
 }
 
 .form-row {
@@ -152,16 +166,21 @@ export default {
 }
 
 .label {
-  color: black;
+  color: rgb(0, 0, 0);
   margin-bottom: 5px;
 }
 
 input {
-  color: black;
+  color: rgb(0, 0, 0);
   background-color: transparent;
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0);
   padding: 8px;
   border-radius: 5px;
+}
+
+input.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+  opacity: 1;
 }
 
 .buttons {
@@ -186,5 +205,9 @@ input {
 
 .cancel-button {
   background-color: #f44336;
+}
+
+h1 {
+  color: black;
 }
 </style>
