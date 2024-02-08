@@ -30,23 +30,6 @@ export default {
 .button-spacing:hover {
   transform: translateY(-2px);
 }
-.button-spacing {
-  margin-top: 40px;
-  margin-right: 20px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.button-spacing:hover {
-  transform: translateY(-2px);
-}
-.button-spacing {
-  margin-top: 60px;
-  /* หรือค่าที่คุณต้องการ */
-  margin-right: 40px;
-=======
->>>>>>> bbbe2d8123227eb7a32d07c2b8bde58ee6d43168
-}
 
 .button-spacing {
   margin-top: 40px;
@@ -58,16 +41,8 @@ export default {
 .button-spacing:hover {
   transform: translateY(-2px);
 }
-
 .button-spacing {
   margin-top: 60px;
   /* หรือค่าที่คุณต้องการ */
   margin-right: 40px;
 }</style>
-
-<style scoped>
-.button-spacing {
-  margin-top: 60px; /* หรือค่าที่คุณต้องการ */
-  margin-right: 40px;
-}
-</style>
