@@ -251,10 +251,23 @@ router.delete('/screens/:screen_id', async (req, res) => {
   try {
     const { screen_id } = req.params;
 
-    const query = 'DELETE FROM Screens WHERE screen_id = ?';
-
+    // Delete tasks associated with the screen
+    const deleteTasksQuery = 'DELETE FROM Tasks WHERE screen_id = ?';
     await new Promise((resolve, reject) => {
-      db.query(query, [screen_id], (err, result) => {
+      db.query(deleteTasksQuery, [screen_id], (err, result) => {
+        if (err) {
+          console.error('Error deleting tasks:', err);
+          reject('Error deleting screen: Database error');
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+    // Delete the screen
+    const deleteScreenQuery = 'DELETE FROM Screens WHERE screen_id = ?';
+    await new Promise((resolve, reject) => {
+      db.query(deleteScreenQuery, [screen_id], (err, result) => {
         if (err) {
           console.error('Error deleting screen:', err);
           reject('Error deleting screen: Database error');
@@ -270,8 +283,9 @@ router.delete('/screens/:screen_id', async (req, res) => {
     });
   } catch (error) {
     console.error('Error deleting screen:', error);
-    res.status(500).send('Error deleting screen:  Please try again later.');
+    res.status(500).send('Error deleting screen: Please try again later.');
   }
 });
+
 
 module.exports = router;
