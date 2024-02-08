@@ -171,16 +171,18 @@ export default {
 }
 
 input {
+
   color: rgb(0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(0, 0, 0);
-  padding: 8px;
-  border-radius: 5px;
-}
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
 
 input.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0);
   opacity: 1;
+  }
 }
 
 .buttons {
