@@ -1,26 +1,55 @@
-<!-- Login.vue -->
-
 <template>
-  <v-app>
-    <div class="login-container">
-      <h1>Login</h1>
+  <v-app class="app-background">
+    <v-container class="login-container">
+      <v-card class="login-card" outlined tile>
+        <v-card-title class="headline" style="color: black;">Login</v-card-title>
 
-      <v-form @submit.prevent="login" class="login-form">
-        <v-text-field v-model="user_id" label="User ID" required></v-text-field>
-        <v-text-field
-          v-model="user_password"
-          label="Password"
-          type="password"
-          required
-        ></v-text-field>
+        <v-card-text>
+          <v-form @submit.prevent="login" class="login-form">
+            <v-text-field 
+              v-model="user_id" 
+              label="User ID" 
+              outlined
+              required
+              color="black"
+              input-color="black"
+              :style="{ backgroundColor: isUserIdFocused ? 'white' : 'white' }"
+              @focus="isUserIdFocused = true"
+              @blur="isUserIdFocused = false"
+            ></v-text-field>
 
-        <v-btn type="submit" class="my-4">Login</v-btn>
-      </v-form>
+            <v-text-field
+              v-model="user_password"
+              label="Password"
+              type="password"
+              outlined
+              required
+              color="black"
+              input-color="black"
+              :style="{ backgroundColor: isUserPasswordFocused ? 'white' : 'white' }"
+              @focus="isUserPasswordFocused = true"
+              @blur="isUserPasswordFocused = false"
+            ></v-text-field>
+
+            <v-row justify="center">
+              <v-col cols="12" md="6">
+                <v-btn type="submit" class="my-4" color="primary" width="100%">Login</v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+          
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="forgotPassword">Forgot Password?</v-btn>
+        </v-card-actions>
+      </v-card>
 
       <v-snackbar v-model="snackbar" :timeout="snackbarTimeout" color="error">
         {{ loginError }}
       </v-snackbar>
-    </div>
+    </v-container>
   </v-app>
 </template>
 
@@ -32,6 +61,8 @@ export default {
     return {
       user_id: "",
       user_password: "",
+      isUserIdFocused: false,
+      isUserPasswordFocused: false,
       snackbar: false,
       snackbarTimeout: 3000,
       loginError: "",
@@ -73,18 +104,52 @@ export default {
       this.snackbar = true;
       this.loginError = message;
     },
+    forgotPassword() {
+      Swal.fire({
+        title: "Forgot Password",
+        text: "Please contact your administrator to reset your password.",
+        icon: "info",
+        confirmButtonText: "OK",
+      });
+    },
   },
 };
 </script>
 
 <style scoped>
+.app-background {
+  background-color: #f0f0f0; /* Change to your desired background color */
+}
+
 .login-container {
-  margin-left: 20px;
-  /* Adjust as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-card {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 10px; /* Adjust the corner radius as needed */
+  background-color: white; /* Change to your desired card background color */
 }
 
 .login-form {
-  max-width: 400px;
-  margin: 0 auto;
+  margin-bottom: 24px;
 }
+
+/* Optional: You can remove if not needed */
+::v-deep .v-text-field .v-label {
+  color: black !important;
+}
+
+::v-deep .v-text-field .v-input__control .v-input__slot input {
+  color: black;
+}
+
+.custom-label-color {
+  color: black !important;
+}
+
 </style>
