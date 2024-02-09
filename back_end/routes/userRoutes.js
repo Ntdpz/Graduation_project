@@ -7,7 +7,7 @@ const fs = require('fs');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const uploadSingle = upload.single('user_pic');
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 router.use(express.json());
@@ -41,27 +41,24 @@ router.post('/login', async (req, res) => {
 
       const user = results[0];
 
-      // ตรวจสอบว่า user_password ไม่เป็น null ก่อนที่จะทำการเปรียบเทียบรหัสผ่าน
-      if (user_password !== null) {
-        const match = await bcrypt.compare(user_password, user.user_password);
-
-        if (match) {
-          // รหัสผ่านถูกต้อง
-          res.json({ message: 'Login successful', user });
-        } else {
-          // รหัสผ่านไม่ถูกต้อง
-          res.status(401).json({ error: 'Invalid user_id or password' });
-        }
-      } else {
-        // ถ้า user_password เป็น null
-        res.status(401).json({ error: 'Invalid user_id or password' });
+      // เปรียบเทียบรหัสผ่านที่ผู้ใช้ป้อนเข้ามากับรหัสผ่านที่เก็บไว้ในฐานข้อมูล
+      if (user_password !== user.user_password) {
+        return res.status(401).json({ error: 'Invalid user_id or password' });
       }
+
+      // สร้าง JWT token
+      const token = jwt.sign({ user_id: user.user_id }, 'your_secret_key_here');
+
+      // ส่ง token กลับไปให้กับผู้ใช้
+      res.json({ message: 'Login successful', token });
+
     });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // Route: ลบ session หรือ token และออกจากระบบ
