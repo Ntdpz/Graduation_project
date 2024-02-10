@@ -14,8 +14,13 @@
             <v-list style="background-color: white;">
               <v-list-item v-for="(item, i) in items" :key="i" @click="handleMenuItemClick(item.title)">
                 <v-list-item-title style="color: black;">{{ item.title }}</v-list-item-title>
+<<<<<<< HEAD
               </v-list-item>
             </v-list>
+=======
+              </v-list-item> 
+            </v-list>            
+>>>>>>> bf230d5285a83dec865833d07fb7137bce155f65
           </v-menu>
         </nav>
 
@@ -29,7 +34,11 @@
 
         <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
         <router-link to="/" style="text-decoration: none; color: #000000;">
+<<<<<<< HEAD
           <v-toolbar-title  class="custom-title" style="color: #000000;">Progress Tracking </v-toolbar-title>
+=======
+          <v-toolbar-title class="custom-title; style=color:black"> Progress Tracking </v-toolbar-title>
+>>>>>>> bf230d5285a83dec865833d07fb7137bce155f65
         </router-link>
 
         <v-spacer></v-spacer>

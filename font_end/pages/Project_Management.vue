@@ -1,36 +1,76 @@
 <template>
-  <div class="dashboard" style="
+  <!-- Dashboard container -->
+  <div
+    class="dashboard"
+    style="
       background-color: #ffffff;
       padding: 10px 70px;
       border-radius: 0;
       margin-right: 30px;
-    ">
+    "
+  >
+    <!-- Greeting and current date/time -->
     <v-row no-gutters class="mt-4">
       <v-col class="text-left" style="margin-right: 16px">
         <h1 class="text-01">{{ greeting }}, Bee</h1>
         <p class="text-01">{{ currentDateTime }}</p>
       </v-col>
 
-      <v-col class="text-right" style="margin-right: auto">
-        <v-btn @click="handleIconClick" color="#9747FF">
-          <router-link to="/project/createProject" style="color: #9747FF">
-            <span style="margin: 0; color: #ffffff"> + Create Project</span>
+      <!-- Buttons for creating a project and showing all projects -->
+      <v-col cols="6" class="text-right">
+        <v-btn
+          @click="handleIconClick"
+          color="#9747FF"
+          style="padding: 5px; margin-left: 10px"
+        >
+          <router-link to="/project/createProject" style="color: #ffffff">
+            <span style="margin: 0"> + Create Project</span>
           </router-link>
         </v-btn>
-      </v-col>
-
-      <v-col class="text-right" style="margin-right: 16px">
-        <v-btn class="work-item" color="#9747FF" @click="handleButtonClick" style="padding: 5px">
+        <v-btn
+          class="work-item"
+          color="#9747FF"
+          @click="handleButtonClick"
+          style="padding: 5px; margin-left: 10px"
+        >
           <p style="margin: 0; color: white">All Projects</p>
         </v-btn>
       </v-col>
     </v-row>
 
+    <!-- Search bar -->
+    <v-row no-gutters>
+      <v-col cols="12">
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Search..."
+          style="
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+          "
+        />
+      </v-col>
+    </v-row>
+
+    <!-- Project cards -->
     <v-row>
-      <v-card v-for="project in projects" :key="project.project_id" class="tracking-work-card mt-6 ml-10"
-        @click="handleTrackingWorkClick(project)">
-        <v-card-title>
-          <h2>{{ project.project_name_TH }}</h2>
+      <v-card
+        v-for="project in filteredProjects"
+        :key="project.project_id"
+        class="tracking-work-card mt-6 ml-10"
+        @click="handleTrackingWorkClick(project)"
+      >
+        <v-card-title class="project-title">
+          <div>
+            <h2>{{ project.project_id }}</h2>
+            <h2>{{ project.project_name_ENG }}</h2>
+            <h2>{{ project.project_name_TH }}</h2>
+          </div>
         </v-card-title>
         <v-card-text>
           <div class="work-item">
@@ -40,14 +80,18 @@
           </div>
 
           <v-card-actions>
-            <!-- Edit button -->
-            <v-btn class="mx-1 project-button" @click="editProject(project)">Edit
+            <!-- Edit and delete buttons -->
+            <v-btn class="mx-1 project-button" @click="editProject(project)"
+              >Edit
             </v-btn>
-            <v-btn class="mx-4 project-button" @click="deleteProject(project)">Delete</v-btn>
+            <v-btn class="mx-4 project-button" @click="deleteProject(project)"
+              >Delete</v-btn
+            >
           </v-card-actions>
         </v-card-text>
       </v-card>
     </v-row>
+
     <!-- Edit Project Form Dialog -->
     <v-dialog v-model="editDialog" max-width="600">
       <v-card>
@@ -56,8 +100,14 @@
           <!-- Form to edit project details -->
           <v-form @submit.prevent="saveEditedProject">
             <!-- Include form fields for editing project details -->
-            <v-text-field v-model="editedProject.project_name_TH" label="Project Name (TH)"></v-text-field>
-            <v-text-field v-model="editedProject.project_name_ENG" label="Project Name (ENG)"></v-text-field>
+            <v-text-field
+              v-model="editedProject.project_name_TH"
+              label="Project Name (TH)"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedProject.project_name_ENG"
+              label="Project Name (ENG)"
+            ></v-text-field>
             <!-- Button to save changes -->
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
@@ -78,7 +128,8 @@ export default {
       currentDateTime: "",
       editDialog: false,
       editedProject: { project_name_TH: "", project_name_ENG: "" },
-      projects: [], // Added projects data array
+      projects: [], // โครงการทั้งหมด
+      searchQuery: "",  // Search query
     };
   },
   methods: {
@@ -206,7 +257,9 @@ export default {
 
     async fetchProjects() {
       try {
-        const response = await this.$axios.get("http://localhost:8080/api/projects");
+        const response = await this.$axios.get(
+          "http://localhost:8080/api/projects"
+        );
         this.projects = response.data;
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -240,6 +293,23 @@ export default {
       } else {
         return "Good Evening";
       }
+    },
+  },
+  computed: {
+      // Filtered projects based on search query
+    filteredProjects() {
+      return this.projects.filter(
+        (project) =>
+          project.project_name_TH
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          project.project_name_ENG
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          project.project_id
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+      );
     },
   },
 
@@ -306,5 +376,13 @@ export default {
   color: #9747ff !important;
   background-color: #ffffff !important;
   font-weight: bold;
+}
+.project-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-title h2 {
+  margin-bottom: 5px; /* ปรับขนาดของระยะห่างระหว่างข้อมูล */
 }
 </style>
