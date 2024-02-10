@@ -2,7 +2,7 @@
   <div class="create-project-container">
     <div class="create-project">
       <form @submit.prevent="handleSubmit">
-        <h1>Create Project</h1>
+        <span style="color:black;"><h1>Create Project</h1></span>
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>

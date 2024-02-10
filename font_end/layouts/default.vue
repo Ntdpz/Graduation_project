@@ -14,13 +14,8 @@
             <v-list style="background-color: white;">
               <v-list-item v-for="(item, i) in items" :key="i" @click="handleMenuItemClick(item.title)">
                 <v-list-item-title style="color: black;">{{ item.title }}</v-list-item-title>
-<<<<<<< HEAD
               </v-list-item>
             </v-list>
-=======
-              </v-list-item> 
-            </v-list>            
->>>>>>> bf230d5285a83dec865833d07fb7137bce155f65
           </v-menu>
         </nav>
 
@@ -34,11 +29,7 @@
 
         <!-- ใส่ router-link เพื่อให้คลิกที่ Progress Tracking นำไปยังหน้าหลัก -->
         <router-link to="/" style="text-decoration: none; color: #000000;">
-<<<<<<< HEAD
-          <v-toolbar-title  class="custom-title" style="color: #000000;">Progress Tracking </v-toolbar-title>
-=======
           <v-toolbar-title class="custom-title; style=color:black"> Progress Tracking </v-toolbar-title>
->>>>>>> bf230d5285a83dec865833d07fb7137bce155f65
         </router-link>
 
         <v-spacer></v-spacer>
@@ -105,46 +96,15 @@ export default {
   },
 };
 </script>
-=======
-  data() {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Admin page home',
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Admin page',
-          to: '/home_page_admin'
-        },
-        {
-          icon: 'mdi-account',
-          title: 'Main test',
-          to: '/navbar'
-        },
-         {
-          icon: 'mdi-account',
-          title: 'Main test2',
-          to: '/UserManage'
-        }
->>>>>>> 2f91d89d57b7f94cea2827bb68e14ae25ef7390f
 
-      ]
-    }
-  }
+<style scoped>
+/* Add your styling here */
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
 }
-<<<<<<< HEAD
-</script>
-=======
 
 .custom-toolbar {
   display: flex;
@@ -161,4 +121,3 @@ export default {
   width: 20px;
 }
 </style>
->>>>>>> main
