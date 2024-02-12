@@ -1,3 +1,4 @@
+
 <template>
   <!-- Dashboard container -->
   <div
@@ -63,8 +64,8 @@
         v-for="project in filteredProjects"
         :key="project.project_id"
         class="tracking-work-card mt-6 ml-10"
-        @click="handleTrackingWorkClick(project)"
-      >
+        @click="navigateToProjectDetail(project)"
+>
         <v-card-title class="project-title">
           <div>
             <h2>{{ project.project_id }}</h2>
@@ -91,6 +92,7 @@
         </v-card-text>
       </v-card>
     </v-row>
+  
 
     <!-- Edit Project Form Dialog -->
     <v-dialog v-model="editDialog" max-width="600">
@@ -139,9 +141,13 @@ export default {
     handleButtonClick() {
       // Add your logic for button click
     },
-    handleTrackingWorkClick(project) {
-      // Add your logic for tracking work click using project data
-      console.log("Clicked on project:", project);
+    navigateToProjectDetail(project) {
+      if (project && project.project_id) {
+        // Navigate to the project detail page with the project ID
+        this.$router.push({ name: 'project-detail', params: { id: project.project_id } });
+      } else {
+        console.error("Invalid project object:", project);
+      }
     },
     handleEditClick(project) {
       // Navigate to the edit page for the selected project
