@@ -3,10 +3,14 @@
     <!-- Search bar -->
     <v-row>
       <v-col cols="">
-        <!-- Input for searching users by first name -->
-        <v-text-field v-model="searchTerm" label="Search" prepend-icon="mdi-magnify" single-line
-          hide-details></v-text-field>
-      </v-col>
+  <!-- Input for searching users by first name -->
+  <v-text-field v-model="searchTerm" label="Search" prepend-icon="mdi-magnify" single-line hide-details 
+                outlined dense
+                :style="{ 'background-color': '#ECEFF1', color: 'black' }"
+                prepend-inner-icon="mdi-magnify"
+                class="custom-search-field"
+  ></v-text-field>
+</v-col>
       <v-col cols="2" class="text-right">
         <!-- Button to add a new user -->
         <v-btn color="primary" class="my-4 mx-4" @click="addUser">+ Add User</v-btn>
@@ -351,5 +355,12 @@ export default {
 </script>
 
 <style scoped>
-/* Add any additional styles if needed */
+
+.custom-search-field .v-label {
+  color: black !important;
+}
+
+.custom-search-field .v-icon {
+  color: black !important;
+}
 </style>
