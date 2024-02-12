@@ -2,34 +2,24 @@
   <div class="create-project-container">
     <div class="create-project">
       <form @submit.prevent="handleSubmit">
-        <span style="color:black;"><h1>Create Project</h1></span>
+        <span style="color:black;">
+          <h1>Create Project</h1>
+        </span>
 
         <div class="form-row">
           <label for="project-id" class="label">Project ID:</label>
-          <input
-            type="text"
-            id="project-id"
-            v-model="project_id"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
+          <input type="text" id="project-id" v-model="project_id" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
         </div>
 
         <div class="form-row">
           <label for="project-name-th" class="label">Project Name (TH):</label>
-          <input
-            type="text"
-            id="project-name-th"
-            v-model="project_name_TH"
-            required
-            :style="{
-              color: 'black',
-              backgroundColor: formSubmitted ? 'gray' : 'transparent',
-            }"
-          />
+          <input type="text" id="project-name-th" v-model="project_name_TH" required :style="{
+            color: 'black',
+            backgroundColor: formSubmitted ? 'gray' : 'transparent',
+          }" />
         </div>
 
         <div class="form-row">
