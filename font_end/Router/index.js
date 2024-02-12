@@ -1,31 +1,34 @@
-// main.js
-// router/index.js
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import EditUser from '@/pages/User/EditUser.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 import HomePageAdmin from './components/HomePageAdmin.vue';
 import ManageUser from './components/ManageUser.vue';
 import ManageProject from './components/ManageProject.vue';
 import UserManage from './components/UserManage.vue';
+import EditUser from '@/pages/User/EditUser.vue';
 import CreateProject from './pages/Project/createProject.vue';
-import EditProject from '@/pages/Project/EditProject.vue';  // Import your EditProject component
-import ProjectManagement from '@/pages/Project/ProjectManagement.vue';  // Import your ProjectManagement component
-Vue.use(VueRouter);
+import EditProject from '@/pages/Project/EditProject.vue';
+import ProjectManagement from '@/pages/Project/ProjectManagement.vue';
+import ProjectDetail from '@/components/ProjectDetails.vue'; // Import the ProjectDetail component
 
-export const routes = [
-  { path: '/', redirect: '/admin' },  // Redirect root to /admin
+// Define routes
+const routes = [
+  { path: '/', redirect: '/admin' },
   { path: '/admin', component: HomePageAdmin },
   { path: '/manage_user', component: ManageUser },
   { path: '/manage_project', component: ManageProject },
   { path: '/UserManage', component: UserManage },
   { path: '/User/editUser/:id', name: 'edit-user', component: EditUser },
   { path: '/project/createProject', component: CreateProject },
-  { path: '/project/editProject/:id', name: 'edit-project', component: EditProject },  // Add this route
-  { path: '/project-management', name: 'project-management', component: ProjectManagement },  // Add a name to the route         
+  { path: '/project/editProject/:id', name: 'edit-project', component: EditProject },
+  { path: '/project-management', name: 'project-management', component: ProjectManagement },
+  { path: '/project/:id', name: 'project-detail', component: ProjectDetail }, // Define the route for ProjectDetail
 ];
 
-const router = new VueRouter({
+// Create router instance
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes
 });
 
+
+// Export router
 export default router;
