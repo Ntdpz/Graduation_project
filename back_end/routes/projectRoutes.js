@@ -124,6 +124,17 @@ router.get('/projects/:project_id', async (req, res) => {
 
     const system_count = systemCountResult[0].system_count;
 
+    // Get system names
+    const systemNamesQuery = 'SELECT Systems.system_name FROM Systems WHERE Systems.project_id = ?';
+    const systemNamesResult = await new Promise((resolve, reject) => {
+      db.query(systemNamesQuery, [project_id], (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+
+    const system_names = systemNamesResult.map(system => system.system_name);
+
     // Get screen count
     const screenCountQuery = 'SELECT COUNT(DISTINCT Screens.screen_id) AS screen_count FROM Screens INNER JOIN Systems ON Screens.system_id = Systems.system_id WHERE Systems.project_id = ?';
     const screenCountResult = await new Promise((resolve, reject) => {
@@ -172,12 +183,24 @@ router.get('/projects/:project_id', async (req, res) => {
     const formatted_project_plan_start = moment(project_plan_start).format('YYYY-MM-DD');
     const formatted_project_plan_end = moment(project_plan_end).format('YYYY-MM-DD');
 
-    res.json({ project_id, project_name_TH, project_name_ENG, system_count, screen_count, task_count, project_progress: Number(project_progress), project_plan_start: formatted_project_plan_start, project_plan_end: formatted_project_plan_end });
+    res.json({ 
+      project_id, 
+      project_name_TH, 
+      project_name_ENG, 
+      system_count, 
+      system_names, 
+      screen_count, 
+      task_count, 
+      project_progress: Number(project_progress), 
+      project_plan_start: formatted_project_plan_start, 
+      project_plan_end: formatted_project_plan_end 
+    });
   } catch (error) {
     console.error('Error fetching project details:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // อัปเดตโปรเจ็คด้วย ID
