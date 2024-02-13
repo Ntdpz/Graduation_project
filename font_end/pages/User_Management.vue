@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-left: 50px; margin-right: 50px;">
     <!-- Search bar -->
     <v-row>
       <v-col cols="">
@@ -19,7 +19,7 @@
       <!-- Loop through users and display cards -->
       <v-col v-for="(user, index) in filteredUsers" :key="index" cols="12" md="4">
         <!-- User card -->
-        <v-card color="white" class="mx-auto" max-width="400">
+        <v-card color="white" class="mx-auto" max-width="auto">
           <!-- User image -->
           <v-img class="align-end text-white" height="200" :src="user.user_pic" cover @click="viewDetails(user)">
             <v-card-title style="color: black;" @click="viewDetails(user)">{{ user.user_firstname }} {{ user.user_lastname }}</v-card-title>
