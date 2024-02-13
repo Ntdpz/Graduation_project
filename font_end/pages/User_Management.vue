@@ -52,9 +52,9 @@
 
     <!-- Edit User Form Dialog -->
     <v-dialog v-model="editDialog" max-width="600" >
-      <v-card style="background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">
+      <v-card>
         <v-card-title >Edit User</v-card-title>
-        <v-card-text style="color: rgb(0, 0, 0);">
+        <v-card-text>
           <!-- Form to edit user details -->
           <v-form @submit.prevent="saveEditedUser">
             <v-text-field v-model="editedUser.user_firstname" label="First Name"></v-text-field>
