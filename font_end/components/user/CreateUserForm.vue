@@ -129,7 +129,7 @@
           const formData = new FormData();
           formData.append("user_pic", this.user_pic);
   
-          const response = await this.$axios.post("/api/users", {
+          const response = await this.$axios.post("http://localhost:8080/api/users", {
             Users: [
               {
                 user_firstname: this.user_firstname,
