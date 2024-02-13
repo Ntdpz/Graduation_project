@@ -1,15 +1,12 @@
 
 <template>
   <!-- Dashboard container -->
-  <div
-    class="dashboard"
-    style="
+  <div class="dashboard" style="
       background-color: #ffffff;
       padding: 10px 70px;
       border-radius: 0;
       margin-right: 30px;
-    "
-  >
+    ">
     <!-- Greeting and current date/time -->
     <v-row no-gutters class="mt-4">
       <v-col class="text-left" style="margin-right: 16px">
@@ -19,21 +16,12 @@
 
       <!-- Buttons for creating a project and showing all projects -->
       <v-col cols="6" class="text-right">
-        <v-btn
-          @click="handleIconClick"
-          color="#9747FF"
-          style="padding: 5px; margin-left: 10px"
-        >
-          <router-link to="/project/createProject" style="color: #ffffff">
-            <span style="margin: 0"> + Create Project</span>
+        <v-btn @click="handleIconClick" color="#9747FF">
+          <router-link to="/project/createProject" style="color: #9747FF">
+            <span style="margin: 0; color: #ffffff"> + Create Project</span>
           </router-link>
         </v-btn>
-        <v-btn
-          class="work-item"
-          color="#9747FF"
-          @click="handleButtonClick"
-          style="padding: 5px; margin-left: 10px"
-        >
+        <v-btn class="work-item" color="#9747FF" @click="handleButtonClick" style="padding: 5px; margin-left: 10px">
           <p style="margin: 0; color: white">All Projects</p>
         </v-btn>
       </v-col>
@@ -42,30 +30,30 @@
     <!-- Search bar -->
     <v-row no-gutters>
       <v-col cols="12">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search..."
-          style="
+        <input type="text" v-model="searchQuery" placeholder="Search..." style="
             margin-bottom: 10px;
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
-          "
-        />
+          " />
       </v-col>
     </v-row>
 
     <!-- Project cards -->
     <v-row>
+<<<<<<< HEAD
       <v-card
         v-for="project in filteredProjects"
         :key="project.project_id"
         class="tracking-work-card mt-6 ml-10"
         @click="navigateToProjectDetail(project)"
 >
+=======
+      <v-card v-for="project in filteredProjects" :key="project.project_id" class="tracking-work-card mt-6 ml-10"
+        @click="handleTrackingWorkClick(project)">
+>>>>>>> 130e38b12d0a5af05ba52ddb0332928331fec43e
         <v-card-title class="project-title">
           <div>
             <h2>{{ project.project_id }}</h2>
@@ -82,12 +70,9 @@
 
           <v-card-actions>
             <!-- Edit and delete buttons -->
-            <v-btn class="mx-1 project-button" @click="editProject(project)"
-              >Edit
+            <v-btn class="mx-1 project-button" @click="editProject(project)">Edit
             </v-btn>
-            <v-btn class="mx-4 project-button" @click="deleteProject(project)"
-              >Delete</v-btn
-            >
+            <v-btn class="mx-4 project-button" @click="deleteProject(project)">Delete</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -102,14 +87,8 @@
           <!-- Form to edit project details -->
           <v-form @submit.prevent="saveEditedProject">
             <!-- Include form fields for editing project details -->
-            <v-text-field
-              v-model="editedProject.project_name_TH"
-              label="Project Name (TH)"
-            ></v-text-field>
-            <v-text-field
-              v-model="editedProject.project_name_ENG"
-              label="Project Name (ENG)"
-            ></v-text-field>
+            <v-text-field v-model="editedProject.project_name_TH" label="Project Name (TH)"></v-text-field>
+            <v-text-field v-model="editedProject.project_name_ENG" label="Project Name (ENG)"></v-text-field>
             <!-- Button to save changes -->
             <v-btn type="submit">Save Changes</v-btn>
           </v-form>
@@ -302,7 +281,7 @@ export default {
     },
   },
   computed: {
-      // Filtered projects based on search query
+    // Filtered projects based on search query
     filteredProjects() {
       return this.projects.filter(
         (project) =>
@@ -383,12 +362,24 @@ export default {
   background-color: #ffffff !important;
   font-weight: bold;
 }
+
 .project-title {
   display: flex;
   flex-direction: column;
 }
 
 .project-title h2 {
-  margin-bottom: 5px; /* ปรับขนาดของระยะห่างระหว่างข้อมูล */
+  margin-bottom: 5px;
+  /* ปรับขนาดของระยะห่างระหว่างข้อมูล */
+}
+
+.router-link-underline {
+  text-decoration: none;
+  /* นำเส้นใต้ออก */
+}
+
+.router-link-underline:hover {
+  text-decoration: underline;
+  /* นำเส้นใต้กลับมาเมื่อเมาส์ไปวางทับ */
 }
 </style>
